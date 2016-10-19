@@ -38,3 +38,12 @@ captures/
 
 # Keystore files
 *.jks
+
+# Intellij user-specific configurations
+.idea/libraries/
+.idea/copyright/profiles_settings.xml
+.idea/compiler.xml
+.idea/encodings.xml
+.idea/misc.xml
+.idea/modules.xml
+.idea/vcs.xml
