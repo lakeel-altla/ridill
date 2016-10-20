@@ -4,7 +4,6 @@ import java.util.Objects;
 
 /**
  * Defines a matrix.
- * Matrices use the post-multiplication (matrix * column vector).
  */
 public class Matrix {
 
