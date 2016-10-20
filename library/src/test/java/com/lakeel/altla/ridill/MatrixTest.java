@@ -438,6 +438,49 @@ public final class MatrixTest {
     }
 
     @Test
+    public void setMatrix() {
+        Matrix result = new Matrix();
+        Matrix value = new Matrix(11, 12, 13, 14,
+                                  21, 22, 23, 24,
+                                  31, 32, 33, 34,
+                                  41, 42, 43, 44);
+        Matrix expected = new Matrix(11, 12, 13, 14,
+                                     21, 22, 23, 24,
+                                     31, 32, 33, 34,
+                                     41, 42, 43, 44);
+
+        result.set(value);
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void setMatrixWithNull() {
+        try {
+            new Matrix().set(null);
+            fail();
+        } catch (ArgumentNullException e) {
+            // expected.
+        }
+    }
+
+    @Test
+    public void setFloat16() {
+        Matrix result = new Matrix();
+        Matrix expected = new Matrix(11, 12, 13, 14,
+                                     21, 22, 23, 24,
+                                     31, 32, 33, 34,
+                                     41, 42, 43, 44);
+
+        result.set(11, 12, 13, 14,
+                   21, 22, 23, 24,
+                   31, 32, 33, 34,
+                   41, 42, 43, 44);
+
+        assertEquals(expected, result);
+    }
+
+    @Test
     public void setInColumnMajorOrder() {
         Matrix matrix = new Matrix();
         matrix.setInColumnMajorOrder(new float[] {

@@ -371,6 +371,32 @@ public class Matrix {
     }
 
     /**
+     * Sets the elements of the specified matrix into this ones.
+     *
+     * @param value The source matrix.
+     */
+    public void set(Matrix value) {
+        if (value == null) throw new ArgumentNullException("value");
+
+        m11 = value.m11;
+        m12 = value.m12;
+        m13 = value.m13;
+        m14 = value.m14;
+        m21 = value.m21;
+        m22 = value.m22;
+        m23 = value.m23;
+        m24 = value.m24;
+        m31 = value.m31;
+        m32 = value.m32;
+        m33 = value.m33;
+        m34 = value.m34;
+        m41 = value.m41;
+        m42 = value.m42;
+        m43 = value.m43;
+        m44 = value.m44;
+    }
+
+    /**
      * Sets elements.
      *
      * @param m11 The value to assign at row 1 column 1 of the matrix.
