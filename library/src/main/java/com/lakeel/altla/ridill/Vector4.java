@@ -3,11 +3,11 @@ package com.lakeel.altla.ridill;
 import java.util.Objects;
 
 /**
- * Defines a vector with 3 components.
+ * Defines a vector with 4 components.
  */
-public class Vector3 {
+public class Vector4 {
 
-    public static final int ELEMENT_COUNT = 3;
+    public static final int ELEMENT_COUNT = 4;
 
     /**
      * The x-component.
@@ -25,9 +25,14 @@ public class Vector3 {
     public float z;
 
     /**
+     * The w-component.
+     */
+    public float w;
+
+    /**
      * Initializes a new instance.
      */
-    public Vector3() {
+    public Vector4() {
     }
 
     /**
@@ -35,8 +40,8 @@ public class Vector3 {
      *
      * @param value The value to initialize each component to.
      */
-    public Vector3(float value) {
-        this(value, value, value);
+    public Vector4(float value) {
+        this(value, value, value, value);
     }
 
     /**
@@ -45,101 +50,58 @@ public class Vector3 {
      * @param x The initial value for the x-component.
      * @param y The initial value for the y-component.
      * @param z The initial value for the z-component.
+     * @param w The initial value for the w-component.
      */
-    public Vector3(float x, float y, float z) {
+    public Vector4(float x, float y, float z, float w) {
         this.x = x;
         this.y = y;
         this.z = z;
+        this.w = w;
     }
 
     /**
-     * Creates a vector (1, 1, 1).
+     * Creates a vector (1, 1, 1, 1).
      *
-     * @return The vector (1, 1, 1).
+     * @return The vector (1, 1, 1, 1).
      */
-    public static Vector3 createOne() {
-        return new Vector3(1);
+    public static Vector4 createOne() {
+        return new Vector4(1);
     }
 
     /**
-     * Creates a x unit vector (1, 0, 0).
+     * Creates a x unit vector (1, 0, 0, 0).
      *
-     * @return The vector (1, 0, 0).
+     * @return The vector (1, 0, 0, 0).
      */
-    public static Vector3 createUnitX() {
-        return new Vector3(1, 0, 0);
+    public static Vector4 createUnitX() {
+        return new Vector4(1, 0, 0, 0);
     }
 
     /**
-     * Creates a y unit vector (0, 1, 0).
+     * Creates a y unit vector (0, 1, 0, 0).
      *
-     * @return The vector (0, 1, 0).
+     * @return The vector (0, 1, 0, 0).
      */
-    public static Vector3 createUnitY() {
-        return new Vector3(0, 1, 0);
+    public static Vector4 createUnitY() {
+        return new Vector4(0, 1, 0, 0);
     }
 
     /**
-     * Creates a z unit vector (0, 0, 1).
+     * Creates a z unit vector (0, 0, 1, 0).
      *
-     * @return The vector (0, 0, 1).
+     * @return The vector (0, 0, 1, 0).
      */
-    public static Vector3 createUnitZ() {
-        return new Vector3(0, 0, 1);
+    public static Vector4 createUnitZ() {
+        return new Vector4(0, 0, 1, 0);
     }
 
     /**
-     * Creates a unit vector designating up (0, 1, 0).
+     * Creates a w unit vector (0, 0, 0, 1).
      *
-     * @return The vector (0, 1, 0).
+     * @return The vector (0, 0, 0, 1).
      */
-    public static Vector3 createUp() {
-        return new Vector3(0, 1, 0);
-    }
-
-    /**
-     * Creates a unit vector designating down (0, -1, 0).
-     *
-     * @return The uvector (0, -1, 0).
-     */
-    public static Vector3 createDown() {
-        return new Vector3(0, -1, 0);
-    }
-
-    /**
-     * Creates a unit vector designating right (-1, 0, 0).
-     *
-     * @return The vector (-1, 0, 0).
-     */
-    public static Vector3 createLeft() {
-        return new Vector3(-1, 0, 0);
-    }
-
-    /**
-     * Creates a unit vector designating left (1, 0, 0).
-     *
-     * @return The vector (1, 0, 0).
-     */
-    public static Vector3 createRight() {
-        return new Vector3(1, 0, 0);
-    }
-
-    /**
-     * Creates a unit vector designating forward in a right-handed coordinate system (0, 0, −1).
-     *
-     * @return The vector (0, 0, -1).
-     */
-    public static Vector3 createForward() {
-        return new Vector3(0, 0, -1);
-    }
-
-    /**
-     * Creates a unit vector designating backward in a right-handed coordinate system (0, 0, −1).
-     *
-     * @return The vector (0, 0, -1).
-     */
-    public static Vector3 createBackward() {
-        return new Vector3(0, 0, 1);
+    public static Vector4 createUnitW() {
+        return new Vector4(0, 0, 0, 1);
     }
 
     /**
@@ -149,7 +111,7 @@ public class Vector3 {
      * @param right  The second source vector.
      * @param result The vector that holds the result.
      */
-    public static void add(Vector3 left, Vector3 right, Vector3 result) {
+    public static void add(Vector4 left, Vector4 right, Vector4 result) {
         if (left == null) throw new ArgumentNullException("left");
         if (right == null) throw new ArgumentNullException("right");
         if (result == null) throw new ArgumentNullException("result");
@@ -157,6 +119,7 @@ public class Vector3 {
         result.x = left.x + right.x;
         result.y = left.y + right.y;
         result.z = left.z + right.z;
+        result.w = left.w + right.w;
     }
 
     /**
@@ -166,7 +129,7 @@ public class Vector3 {
      * @param right  The second source vector.
      * @param result The vector that holds the result.
      */
-    public static void subtract(Vector3 left, Vector3 right, Vector3 result) {
+    public static void subtract(Vector4 left, Vector4 right, Vector4 result) {
         if (left == null) throw new ArgumentNullException("left");
         if (right == null) throw new ArgumentNullException("right");
         if (result == null) throw new ArgumentNullException("result");
@@ -174,6 +137,7 @@ public class Vector3 {
         result.x = left.x - right.x;
         result.y = left.y - right.y;
         result.z = left.z - right.z;
+        result.w = left.w - right.w;
     }
 
     /**
@@ -183,7 +147,7 @@ public class Vector3 {
      * @param right  The second source vector.
      * @param result The vector that holds the result.
      */
-    public static void multiply(Vector3 left, Vector3 right, Vector3 result) {
+    public static void multiply(Vector4 left, Vector4 right, Vector4 result) {
         if (left == null) throw new ArgumentNullException("left");
         if (right == null) throw new ArgumentNullException("right");
         if (result == null) throw new ArgumentNullException("result");
@@ -191,6 +155,7 @@ public class Vector3 {
         result.x = left.x * right.x;
         result.y = left.y * right.y;
         result.z = left.z * right.z;
+        result.w = left.w * right.w;
     }
 
     /**
@@ -200,13 +165,14 @@ public class Vector3 {
      * @param scale  The scale.
      * @param result The vector that holds the result.
      */
-    public static void multiply(Vector3 value, float scale, Vector3 result) {
+    public static void multiply(Vector4 value, float scale, Vector4 result) {
         if (value == null) throw new ArgumentNullException("value");
         if (result == null) throw new ArgumentNullException("result");
 
         result.x = value.x * scale;
         result.y = value.y * scale;
         result.z = value.z * scale;
+        result.w = value.w * scale;
     }
 
     /**
@@ -216,7 +182,7 @@ public class Vector3 {
      * @param right  The second source vector.
      * @param result The vector that holds the result.
      */
-    public static void divide(Vector3 left, Vector3 right, Vector3 result) {
+    public static void divide(Vector4 left, Vector4 right, Vector4 result) {
         if (left == null) throw new ArgumentNullException("left");
         if (right == null) throw new ArgumentNullException("right");
         if (result == null) throw new ArgumentNullException("result");
@@ -224,6 +190,7 @@ public class Vector3 {
         result.x = left.x / right.x;
         result.y = left.y / right.y;
         result.z = left.z / right.z;
+        result.w = left.w / right.w;
     }
 
     /**
@@ -233,7 +200,7 @@ public class Vector3 {
      * @param scale  The scale.
      * @param result The vector that holds the result.
      */
-    public static void divide(Vector3 value, float scale, Vector3 result) {
+    public static void divide(Vector4 value, float scale, Vector4 result) {
         if (value == null) throw new ArgumentNullException("value");
         if (result == null) throw new ArgumentNullException("result");
 
@@ -246,13 +213,14 @@ public class Vector3 {
      * @param value  The source vector.
      * @param result The vector that holds the result.
      */
-    public static void negate(Vector3 value, Vector3 result) {
+    public static void negate(Vector4 value, Vector4 result) {
         if (value == null) throw new ArgumentNullException("value");
         if (result == null) throw new ArgumentNullException("result");
 
         result.x = -value.x;
         result.y = -value.y;
         result.z = -value.z;
+        result.w = -value.w;
     }
 
     /**
@@ -262,28 +230,11 @@ public class Vector3 {
      * @param right The second source vector.
      * @return The result.
      */
-    public static float dot(Vector3 left, Vector3 right) {
+    public static float dot(Vector4 left, Vector4 right) {
         if (left == null) throw new ArgumentNullException("left");
         if (right == null) throw new ArgumentNullException("right");
 
-        return (left.x * right.x) + (left.y * right.y) + (left.z * right.z);
-    }
-
-    /**
-     * Calculates the cross product of two vectors.
-     *
-     * @param left   The first source vector.
-     * @param right  The second source vector.
-     * @param result The vector that holds the result.
-     */
-    public static void cross(Vector3 left, Vector3 right, Vector3 result) {
-        if (left == null) throw new ArgumentNullException("left");
-        if (right == null) throw new ArgumentNullException("right");
-        if (result == null) throw new ArgumentNullException("result");
-
-        result.x = (left.y * right.z) - (left.z * right.y);
-        result.y = (left.z * right.x) - (left.x * right.z);
-        result.z = (left.x * right.y) - (left.y * right.x);
+        return (left.x * right.x) + (left.y * right.y) + (left.z * right.z) + (left.w * right.w);
     }
 
     /**
@@ -293,15 +244,16 @@ public class Vector3 {
      * @param value2 The second source vector.
      * @return The result.
      */
-    public static float distanceSquared(Vector3 value1, Vector3 value2) {
+    public static float distanceSquared(Vector4 value1, Vector4 value2) {
         if (value1 == null) throw new ArgumentNullException("value1");
         if (value2 == null) throw new ArgumentNullException("value2");
 
         float x = value1.x - value2.x;
         float y = value1.y - value2.y;
         float z = value1.z - value2.z;
+        float w = value1.w - value2.w;
 
-        return (x * x) + (y * y) + (z * z);
+        return (x * x) + (y * y) + (z * z) + (w * w);
     }
 
     /**
@@ -311,7 +263,7 @@ public class Vector3 {
      * @param value2 The second source vector.
      * @return The result.
      */
-    public static float distance(Vector3 value1, Vector3 value2) {
+    public static float distance(Vector4 value1, Vector4 value2) {
         return (float) Math.sqrt(distanceSquared(value1, value2));
     }
 
@@ -321,7 +273,7 @@ public class Vector3 {
      * @param value  The source vector.
      * @param result The vector that holds the result.
      */
-    public static void normalize(Vector3 value, Vector3 result) {
+    public static void normalize(Vector4 value, Vector4 result) {
         if (value == null) throw new ArgumentNullException("value");
         if (result == null) throw new ArgumentNullException("result");
 
@@ -335,7 +287,7 @@ public class Vector3 {
      * @return The length of the vector squared.
      */
     public float lengthSquared() {
-        return x * x + y * y + z * z;
+        return (x * x) + (y * y) + (z * z) + (w * w);
     }
 
     /**
@@ -357,20 +309,20 @@ public class Vector3 {
             x *= inverse;
             y *= inverse;
             z *= inverse;
+            w *= inverse;
         }
     }
 
     /**
-     * Sets components of the specified vector into this ones.
+     * Sets the components of the specified vector into this ones.
      *
      * @param value The source vector.
      */
-    public void set(Vector3 value) {
-        if (value == null) throw new ArgumentNullException("value");
-
+    public void set(Vector4 value) {
         x = value.x;
         y = value.y;
         z = value.z;
+        w = value.w;
     }
 
     /**
@@ -379,11 +331,13 @@ public class Vector3 {
      * @param x The value for the x-component.
      * @param y The value for the y-component.
      * @param z The value for the z-component.
+     * @param w The value for the w-component.
      */
-    public void set(float x, float y, float z) {
+    public void set(float x, float y, float z, float w) {
         this.x = x;
         this.y = y;
         this.z = z;
+        this.w = w;
     }
 
     /**
@@ -393,11 +347,12 @@ public class Vector3 {
      */
     public void set(float[] values) {
         if (values == null) throw new ArgumentNullException("values");
-        if (values.length != ELEMENT_COUNT) throw new IllegalArgumentException("The length of 'values' must be 3.");
+        if (values.length != ELEMENT_COUNT) throw new IllegalArgumentException("The length of 'values' must be 4.");
 
         x = values[0];
         y = values[1];
         z = values[2];
+        w = values[3];
     }
 
     /**
@@ -407,36 +362,37 @@ public class Vector3 {
      */
     public void toArray(float[] result) {
         if (result == null) throw new ArgumentNullException("result");
-        if (result.length != ELEMENT_COUNT) throw new IllegalArgumentException("The length of 'result' must be 3.");
+        if (result.length != ELEMENT_COUNT) throw new IllegalArgumentException("The length of 'result' must be 4.");
 
         result[0] = x;
         result[1] = y;
         result[2] = z;
+        result[3] = w;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Vector4 vector4 = (Vector4) o;
+        return Float.compare(vector4.x, x) == 0 &&
+               Float.compare(vector4.y, y) == 0 &&
+               Float.compare(vector4.z, z) == 0 &&
+               Float.compare(vector4.w, w) == 0;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(x, y, z);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null || obj.getClass() != getClass()) {
-            return false;
-        }
-        Vector3 other = (Vector3) obj;
-        return x == other.x && y == other.y && z == other.z;
+        return Objects.hash(x, y, z, w);
     }
 
     @Override
     public String toString() {
-        return "Vector3{" +
+        return "Vector4{" +
                "x=" + x +
                ", y=" + y +
                ", z=" + z +
+               ", w=" + w +
                '}';
     }
 }

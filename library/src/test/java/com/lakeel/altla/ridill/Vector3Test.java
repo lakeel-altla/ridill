@@ -712,19 +712,125 @@ public final class Vector3Test {
     }
 
     @Test
-    public void set() {
-        Vector3 target = new Vector3(1);
-        Vector3 value = new Vector3(2);
+    public void setVector3() {
+        Vector3 value = new Vector3(2, 3, 4);
+        Vector3 result = new Vector3(1);
 
-        target.set(value);
+        result.set(value);
 
-        assertEquals(2, value.x, 0);
-        assertEquals(2, value.y, 0);
-        assertEquals(2, value.z, 0);
+        assertEquals(2, result.x, 0);
+        assertEquals(3, result.y, 0);
+        assertEquals(4, result.z, 0);
+    }
 
-        assertEquals(2, target.x, 0);
-        assertEquals(2, target.y, 0);
-        assertEquals(2, target.z, 0);
+    @Test
+    public void setVector3WithNull() {
+        Vector3 vector = new Vector3();
+
+        try {
+            vector.set((Vector3) null);
+            fail();
+        } catch (ArgumentNullException e) {
+            // expected.
+        }
+    }
+
+    @Test
+    public void setFloatFloatFloat() {
+        Vector3 result = new Vector3(1);
+
+        result.set(2, 3, 4);
+
+        assertEquals(2, result.x, 0);
+        assertEquals(3, result.y, 0);
+        assertEquals(4, result.z, 0);
+    }
+
+    @Test
+    public void setFloatArray() {
+        Vector3 result = new Vector3(1);
+
+        result.set(new float[] {
+                2, 3, 4
+        });
+
+        assertEquals(2, result.x, 0);
+        assertEquals(3, result.y, 0);
+        assertEquals(4, result.z, 0);
+    }
+
+    @Test
+    public void setFloatArrayWithNull() {
+        Vector3 vector = new Vector3();
+
+        try {
+            vector.set((float[]) null);
+            fail();
+        } catch (ArgumentNullException e) {
+            // expected.
+        }
+    }
+
+    @Test
+    public void setFloatArrayWithInvalidLengthArray() {
+        Vector3 vector = new Vector3();
+
+        try {
+            vector.set(new float[0]);
+            fail();
+        } catch (IllegalArgumentException e) {
+            // expected.
+        }
+
+        try {
+            vector.set(new float[4]);
+            fail();
+        } catch (IllegalArgumentException e) {
+            // expected.
+        }
+    }
+
+    @Test
+    public void toArray() {
+        Vector3 vector = new Vector3(1, 2, 3);
+        float[] result = new float[3];
+
+        vector.toArray(result);
+
+        assertEquals(1, result[0], 0);
+        assertEquals(2, result[1], 0);
+        assertEquals(3, result[2], 0);
+    }
+
+    @Test
+    public void toArrayWithNull() {
+        Vector3 vector = new Vector3();
+
+        try {
+            vector.toArray(null);
+            fail();
+        } catch (ArgumentNullException e) {
+            // expected.
+        }
+    }
+
+    @Test
+    public void toArrayWithInvalidLengthArray() {
+        Vector3 vector = new Vector3();
+
+        try {
+            vector.toArray(new float[] {});
+            fail();
+        } catch (IllegalArgumentException e) {
+            //expected.
+        }
+
+        try {
+            vector.toArray(new float[4]);
+            fail();
+        } catch (IllegalArgumentException e) {
+            //expected.
+        }
     }
 
     @Test
