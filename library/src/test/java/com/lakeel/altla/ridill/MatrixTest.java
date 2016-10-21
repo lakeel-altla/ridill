@@ -968,7 +968,7 @@ public final class MatrixTest {
         Matrix result = new Matrix();
         float tolerance = 0.0001f;
 
-        lookAt.calculate(new Vector3(0, 0, 1), new Vector3(0, 0, -1), Vector3.createUp(), result);
+        lookAt.calculate(new Vector3(0, 0, 1), new Vector3(0, 0, -1), new Vector3(0, 1, 0), result);
 
         assertEquals(1, result.m11, tolerance);
         assertEquals(0, result.m21, tolerance);
