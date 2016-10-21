@@ -48,6 +48,31 @@ public class Quaternion {
         this.w = w;
     }
 
+    /**
+     * Creates the conjugate of a specified quaternion.
+     *
+     * @param value  The source quaternion.
+     * @param result The quaternion that holds the result.
+     */
+    public static void conjugate(Quaternion value, Quaternion result) {
+        if (value == null) throw new ArgumentNullException("value");
+        if (result == null) throw new ArgumentNullException("result");
+
+        result.x = -value.x;
+        result.y = -value.y;
+        result.z = -value.z;
+        result.w = value.w;
+    }
+
+    /**
+     * Transforms this into its conjugate.
+     */
+    public void conjugate() {
+        x = -x;
+        y = -y;
+        z = -z;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
