@@ -305,6 +305,16 @@ public class Vector3 {
     }
 
     /**
+     * Sets the value into this components.
+     *
+     * @param value The value to initialize each component to.
+     * @return This instance.
+     */
+    public Vector3 set(float value) {
+        return set(value, value, value);
+    }
+
+    /**
      * Sets the array into this components.
      *
      * @param values The values for components.
@@ -322,12 +332,21 @@ public class Vector3 {
     }
 
     /**
+     * Initializes this instance as the vector (0, 0, 0).
+     *
+     * @return This instance.
+     */
+    public Vector3 asZero() {
+        return set(0);
+    }
+
+    /**
      * Initializes this instance as the vector (1, 1, 1).
      *
      * @return This instance.
      */
     public Vector3 asOne() {
-        return set(1, 1, 1);
+        return set(1);
     }
 
     /**

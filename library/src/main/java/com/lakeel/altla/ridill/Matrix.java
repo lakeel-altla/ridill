@@ -1,5 +1,7 @@
 package com.lakeel.altla.ridill;
 
+import com.lakeel.altla.ridill.pool.Vector3Pool;
+
 import java.util.Objects;
 
 /**
@@ -354,6 +356,57 @@ public class Matrix {
     }
 
     /**
+     * Creates a look-at matrix.
+     *
+     * @param position The position of a camera.
+     * @param target   The look-at target of a camera.
+     * @param up       The up vector of a camera.
+     * @param result   The matrix that holds the result.
+     */
+    public static void createLookAt(Vector3 position, Vector3 target, Vector3 up, Matrix result) {
+        if (position == null) throw new ArgumentNullException("position");
+        if (target == null) throw new ArgumentNullException("target");
+        if (up == null) throw new ArgumentNullException("up");
+        if (result == null) throw new ArgumentNullException("result");
+
+        Vector3Pool pool = Vector3Pool.getInstance();
+        Vector3 xaxis = pool.borrowObject();
+        Vector3 yaxis = pool.borrowObject();
+        Vector3 zaxis = pool.borrowObject();
+
+        Vector3.subtract(position, target, zaxis);
+        zaxis.normalize();
+
+        Vector3.cross(up, zaxis, xaxis);
+        xaxis.normalize();
+
+        Vector3.cross(zaxis, xaxis, yaxis);
+        yaxis.normalize();
+
+        result.asIdentity();
+
+        result.m11 = xaxis.x;
+        result.m21 = xaxis.y;
+        result.m31 = xaxis.z;
+
+        result.m12 = yaxis.x;
+        result.m22 = yaxis.y;
+        result.m32 = yaxis.z;
+
+        result.m13 = zaxis.x;
+        result.m23 = zaxis.y;
+        result.m33 = zaxis.z;
+
+        result.m14 = -Vector3.dot(xaxis, position);
+        result.m24 = -Vector3.dot(yaxis, position);
+        result.m34 = -Vector3.dot(zaxis, position);
+
+        pool.returnObject(xaxis);
+        pool.returnObject(yaxis);
+        pool.returnObject(zaxis);
+    }
+
+    /**
      * Adds two matrices.
      *
      * @param left   The first source matrix.
@@ -513,7 +566,7 @@ public class Matrix {
 
         float det = value.m11 * d11 - value.m12 * d12 + value.m13 * d13 - value.m14 * d14;
         if (Math.abs(det) == 0.0f) {
-            result.setZero();
+            result.asZero();
             return;
         }
 
@@ -563,8 +616,9 @@ public class Matrix {
      * Sets the elements of the specified matrix into this ones.
      *
      * @param value The source matrix.
+     * @return This instance.
      */
-    public void set(Matrix value) {
+    public Matrix set(Matrix value) {
         if (value == null) throw new ArgumentNullException("value");
 
         m11 = value.m11;
@@ -583,6 +637,8 @@ public class Matrix {
         m42 = value.m42;
         m43 = value.m43;
         m44 = value.m44;
+
+        return this;
     }
 
     /**
@@ -604,11 +660,12 @@ public class Matrix {
      * @param m42 The value to assign at row 4 column 2 of the matrix.
      * @param m43 The value to assign at row 4 column 3 of the matrix.
      * @param m44 The value to assign at row 4 column 4 of the matrix.
+     * @return This instance.
      */
-    public void set(float m11, float m12, float m13, float m14,
-                    float m21, float m22, float m23, float m24,
-                    float m31, float m32, float m33, float m34,
-                    float m41, float m42, float m43, float m44) {
+    public Matrix set(float m11, float m12, float m13, float m14,
+                      float m21, float m22, float m23, float m24,
+                      float m31, float m32, float m33, float m34,
+                      float m41, float m42, float m43, float m44) {
         this.m11 = m11;
         this.m12 = m12;
         this.m13 = m13;
@@ -625,14 +682,17 @@ public class Matrix {
         this.m42 = m42;
         this.m43 = m43;
         this.m44 = m44;
+
+        return this;
     }
 
     /**
      * Sets values in row-major order.
      *
      * @param values The values in row-major order.
+     * @return This instance.
      */
-    public void setInRowMajorOrder(float[] values) {
+    public Matrix setInRowMajorOrder(float[] values) {
         if (values == null) throw new ArgumentNullException("values");
         if (values.length != ELEMENT_COUNT) {
             throw new IllegalArgumentException("'values' must be an array of length 16.");
@@ -657,14 +717,17 @@ public class Matrix {
         m42 = values[13];
         m43 = values[14];
         m44 = values[15];
+
+        return this;
     }
 
     /**
      * Sets values in column-major order.
      *
      * @param values The values in column-major order.
+     * @return This instance.
      */
-    public void setInColumnMajorOrder(float[] values) {
+    public Matrix setInColumnMajorOrder(float[] values) {
         if (values == null) throw new ArgumentNullException("values");
         if (values.length != ELEMENT_COUNT) {
             throw new IllegalArgumentException("'values' must be an array of length 16.");
@@ -689,26 +752,32 @@ public class Matrix {
         m24 = values[13];
         m34 = values[14];
         m44 = values[15];
+
+        return this;
     }
 
     /**
      * Sets 0 into all elements.
+     *
+     * @return This instance.
      */
-    public void setZero() {
-        set(0, 0, 0, 0,
-            0, 0, 0, 0,
-            0, 0, 0, 0,
-            0, 0, 0, 0);
+    public Matrix asZero() {
+        return set(0, 0, 0, 0,
+                   0, 0, 0, 0,
+                   0, 0, 0, 0,
+                   0, 0, 0, 0);
     }
 
     /**
      * Sets elements of the identity matrix.
+     *
+     * @return This instance.
      */
-    public void setIdentity() {
-        set(1, 0, 0, 0,
-            0, 1, 0, 0,
-            0, 0, 1, 0,
-            0, 0, 0, 1);
+    public Matrix asIdentity() {
+        return set(1, 0, 0, 0,
+                   0, 1, 0, 0,
+                   0, 0, 1, 0,
+                   0, 0, 0, 1);
     }
 
     /**
@@ -819,53 +888,5 @@ public class Matrix {
                ", m43=" + m43 +
                ", m44=" + m44 +
                '}';
-    }
-
-    /**
-     * Defines the culculation of a look-at matrix.
-     */
-    public static class LookAt {
-
-        private final Vector3 mXAxis = new Vector3();
-
-        private final Vector3 mYAxis = new Vector3();
-
-        private final Vector3 mZAxis = new Vector3();
-
-        /**
-         * Calculates a look-at matrix.
-         *
-         * @param position The position of a camera.
-         * @param target   The look-at target of a camera.
-         * @param up       The up vector of a camera.
-         */
-        public void calculate(Vector3 position, Vector3 target, Vector3 up, Matrix result) {
-            Vector3.subtract(position, target, mZAxis);
-            mZAxis.normalize();
-
-            Vector3.cross(up, mZAxis, mXAxis);
-            mXAxis.normalize();
-
-            Vector3.cross(mZAxis, mXAxis, mYAxis);
-            mYAxis.normalize();
-
-            result.setIdentity();
-
-            result.m11 = mXAxis.x;
-            result.m21 = mXAxis.y;
-            result.m31 = mXAxis.z;
-
-            result.m12 = mYAxis.x;
-            result.m22 = mYAxis.y;
-            result.m32 = mYAxis.z;
-
-            result.m13 = mZAxis.x;
-            result.m23 = mZAxis.y;
-            result.m33 = mZAxis.z;
-
-            result.m14 = -Vector3.dot(mXAxis, position);
-            result.m24 = -Vector3.dot(mYAxis, position);
-            result.m34 = -Vector3.dot(mZAxis, position);
-        }
     }
 }

@@ -535,6 +535,19 @@ public final class Vector4Test {
     }
 
     @Test
+    public void setFloat() {
+        Vector4 vector = new Vector4(1);
+
+        Vector4 result = vector.set(7);
+
+        assertTrue(result == vector);
+        assertEquals(7, vector.x, 0);
+        assertEquals(7, vector.y, 0);
+        assertEquals(7, vector.z, 0);
+        assertEquals(7, vector.w, 0);
+    }
+
+    @Test
     public void setFloatArray() {
         Vector4 vector = new Vector4(1);
 
@@ -578,6 +591,16 @@ public final class Vector4Test {
         } catch (IllegalArgumentException e) {
             // expected.
         }
+    }
+
+    @Test
+    public void asZero() {
+        Vector4 vector = new Vector4(7);
+
+        Vector4 result = vector.asZero();
+
+        assertTrue(result == vector);
+        assertEquals(new Vector4(), result);
     }
 
     @Test
@@ -628,6 +651,44 @@ public final class Vector4Test {
 
         assertTrue(result == vector);
         assertEquals(new Vector4(0, 0, 0, 1), result);
+    }
+
+    @Test
+    public void toArrayFloatArray() {
+        Vector4 vector = new Vector4(1, 2, 3, 4);
+        float[] result = new float[4];
+
+        vector.toArray(result);
+
+        assertEquals(1, result[0], 0);
+        assertEquals(2, result[1], 0);
+        assertEquals(3, result[2], 0);
+        assertEquals(4, result[3], 0);
+    }
+
+    @Test
+    public void toArrayFloatArrayWithNull() {
+        try {
+            new Vector4().toArray(null);
+            fail();
+        } catch (ArgumentNullException e) {
+            // expected.
+        }
+    }
+
+    @Test
+    public void toArrayFloatArrayWithInvalidLengthArray() {
+        try {
+            new Vector4().toArray(new float[0]);
+        } catch (IllegalArgumentException e) {
+            // expected.
+        }
+
+        try {
+            new Vector4().toArray(new float[5]);
+        } catch (IllegalArgumentException e) {
+            // expected.
+        }
     }
 
     @Test

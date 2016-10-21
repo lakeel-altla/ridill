@@ -370,6 +370,67 @@ public final class MatrixTest {
     }
 
     @Test
+    public void lookAt() {
+        Matrix result = new Matrix();
+        float tolerance = 0.0001f;
+
+        Matrix.createLookAt(new Vector3(0, 0, 1), new Vector3(0, 0, -1), new Vector3(0, 1, 0), result);
+
+        assertEquals(1, result.m11, tolerance);
+        assertEquals(0, result.m21, tolerance);
+        assertEquals(0, result.m31, tolerance);
+
+        assertEquals(0, result.m12, tolerance);
+        assertEquals(1, result.m22, tolerance);
+        assertEquals(0, result.m32, tolerance);
+
+        assertEquals(0, result.m13, tolerance);
+        assertEquals(0, result.m23, tolerance);
+        assertEquals(1, result.m33, tolerance);
+
+        assertEquals(0, result.m14, tolerance);
+        assertEquals(0, result.m24, tolerance);
+        assertEquals(-1, result.m34, tolerance);
+
+        assertEquals(0, result.m41, 0);
+        assertEquals(0, result.m42, 0);
+        assertEquals(0, result.m43, 0);
+        assertEquals(1, result.m44, 0);
+    }
+
+
+    @Test
+    public void lookAtWithNull() {
+        try {
+            Matrix.createLookAt(null, new Vector3(), new Vector3(), new Matrix());
+            fail();
+        } catch (ArgumentNullException e) {
+            // expected.
+        }
+
+        try {
+            Matrix.createLookAt(new Vector3(), null, new Vector3(), new Matrix());
+            fail();
+        } catch (ArgumentNullException e) {
+            // expected.
+        }
+
+        try {
+            Matrix.createLookAt(new Vector3(), new Vector3(), null, new Matrix());
+            fail();
+        } catch (ArgumentNullException e) {
+            // expected.
+        }
+
+        try {
+            Matrix.createLookAt(new Vector3(), new Vector3(), new Vector3(), null);
+            fail();
+        } catch (ArgumentNullException e) {
+            // expected.
+        }
+    }
+
+    @Test
     public void add() {
         Matrix left = new Matrix(1, 2, 3, 4,
                                  5, 6, 7, 8,
@@ -693,7 +754,7 @@ public final class MatrixTest {
 
     @Test
     public void setMatrix() {
-        Matrix result = new Matrix();
+        Matrix matrix = new Matrix();
         Matrix value = new Matrix(11, 12, 13, 14,
                                   21, 22, 23, 24,
                                   31, 32, 33, 34,
@@ -703,9 +764,10 @@ public final class MatrixTest {
                                      31, 32, 33, 34,
                                      41, 42, 43, 44);
 
-        result.set(value);
+        Matrix result = matrix.set(value);
 
-        assertEquals(expected, result);
+        assertTrue(result == matrix);
+        assertEquals(expected, matrix);
     }
 
     @Test
@@ -720,24 +782,25 @@ public final class MatrixTest {
 
     @Test
     public void setFloat16() {
-        Matrix result = new Matrix();
+        Matrix matrix = new Matrix();
         Matrix expected = new Matrix(11, 12, 13, 14,
                                      21, 22, 23, 24,
                                      31, 32, 33, 34,
                                      41, 42, 43, 44);
 
-        result.set(11, 12, 13, 14,
-                   21, 22, 23, 24,
-                   31, 32, 33, 34,
-                   41, 42, 43, 44);
+        Matrix result = matrix.set(11, 12, 13, 14,
+                                   21, 22, 23, 24,
+                                   31, 32, 33, 34,
+                                   41, 42, 43, 44);
 
-        assertEquals(expected, result);
+        assertTrue(result == matrix);
+        assertEquals(expected, matrix);
     }
 
     @Test
     public void setInColumnMajorOrder() {
         Matrix matrix = new Matrix();
-        matrix.setInColumnMajorOrder(new float[] {
+        Matrix result = matrix.setInColumnMajorOrder(new float[] {
                 11, 21, 31, 41,
                 12, 22, 32, 42,
                 13, 23, 33, 43,
@@ -748,6 +811,7 @@ public final class MatrixTest {
                                      31, 32, 33, 34,
                                      41, 42, 43, 44);
 
+        assertTrue(result == matrix);
         assertEquals(expected, matrix);
     }
 
@@ -781,7 +845,7 @@ public final class MatrixTest {
     @Test
     public void setInRowMajorOrder() {
         Matrix matrix = new Matrix();
-        matrix.setInRowMajorOrder(new float[] {
+        Matrix result = matrix.setInRowMajorOrder(new float[] {
                 11, 12, 13, 14,
                 21, 22, 23, 24,
                 31, 32, 33, 34,
@@ -792,6 +856,7 @@ public final class MatrixTest {
                                      31, 32, 33, 34,
                                      41, 42, 43, 44);
 
+        assertTrue(result == matrix);
         assertEquals(expected, matrix);
     }
 
@@ -823,31 +888,34 @@ public final class MatrixTest {
     }
 
     @Test
-    public void setZero() {
-        Matrix expected = new Matrix();
-        Matrix result = new Matrix(9, 9, 9, 9,
+    public void asZero() {
+        Matrix matrix = new Matrix(9, 9, 9, 9,
                                    9, 9, 9, 9,
                                    9, 9, 9, 9,
                                    9, 9, 9, 9);
+        Matrix expected = new Matrix();
 
-        result.setZero();
+        Matrix result = matrix.asZero();
 
-        assertEquals(expected, result);
+        assertTrue(result == matrix);
+        assertEquals(expected, matrix);
     }
 
     @Test
-    public void setIdentity() {
+    public void asIdentity() {
+        Matrix matrix = new Matrix(9, 9, 9, 9,
+                                   9, 9, 9, 9,
+                                   9, 9, 9, 9,
+                                   9, 9, 9, 9);
         Matrix expected = new Matrix(1, 0, 0, 0,
                                      0, 1, 0, 0,
                                      0, 0, 1, 0,
                                      0, 0, 0, 1);
-        Matrix result = new Matrix(9, 9, 9, 9,
-                                   9, 9, 9, 9,
-                                   9, 9, 9, 9,
-                                   9, 9, 9, 9);
-        result.setIdentity();
 
-        assertEquals(expected, result);
+        Matrix result = matrix.asIdentity();
+
+        assertTrue(result == matrix);
+        assertEquals(expected, matrix);
     }
 
     @Test
@@ -960,35 +1028,5 @@ public final class MatrixTest {
 
         assertTrue(matrix1.hashCode() == matrix2.hashCode());
         assertFalse(matrix1.hashCode() == matrix3.hashCode());
-    }
-
-    @Test
-    public void lookAt() {
-        Matrix.LookAt lookAt = new Matrix.LookAt();
-        Matrix result = new Matrix();
-        float tolerance = 0.0001f;
-
-        lookAt.calculate(new Vector3(0, 0, 1), new Vector3(0, 0, -1), new Vector3(0, 1, 0), result);
-
-        assertEquals(1, result.m11, tolerance);
-        assertEquals(0, result.m21, tolerance);
-        assertEquals(0, result.m31, tolerance);
-
-        assertEquals(0, result.m12, tolerance);
-        assertEquals(1, result.m22, tolerance);
-        assertEquals(0, result.m32, tolerance);
-
-        assertEquals(0, result.m13, tolerance);
-        assertEquals(0, result.m23, tolerance);
-        assertEquals(1, result.m33, tolerance);
-
-        assertEquals(0, result.m14, tolerance);
-        assertEquals(0, result.m24, tolerance);
-        assertEquals(-1, result.m34, tolerance);
-
-        assertEquals(0, result.m41, 0);
-        assertEquals(0, result.m42, 0);
-        assertEquals(0, result.m43, 0);
-        assertEquals(1, result.m44, 0);
     }
 }
