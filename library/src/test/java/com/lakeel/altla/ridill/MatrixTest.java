@@ -75,6 +75,301 @@ public final class MatrixTest {
     }
 
     @Test
+    public void createTranslationFloatFloatFloatMatrix() {
+        Matrix result = new Matrix();
+        Matrix expected = new Matrix(1, 0, 0, 14,
+                                     0, 1, 0, 24,
+                                     0, 0, 1, 34,
+                                     0, 0, 0, 1);
+
+        Matrix.createTranslation(14, 24, 34, result);
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void createTranslationFloatFloatFloatMatrixWithNull() {
+        try {
+            Matrix.createTranslation(0, 0, 0, null);
+            fail();
+        } catch (ArgumentNullException e) {
+            // expected.
+        }
+    }
+
+    @Test
+    public void createTranslationVector3() {
+        Matrix result = new Matrix();
+        Matrix expected = new Matrix(1, 0, 0, 14,
+                                     0, 1, 0, 24,
+                                     0, 0, 1, 34,
+                                     0, 0, 0, 1);
+
+        Matrix.createTranslation(new Vector3(14, 24, 34), result);
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void createTranslationVector3WithNull() {
+        try {
+            Matrix.createTranslation(null, new Matrix());
+            fail();
+        } catch (ArgumentNullException e) {
+            // expected.
+        }
+
+        try {
+            Matrix.createTranslation(new Vector3(), null);
+            fail();
+        } catch (ArgumentNullException e) {
+            // expected.
+        }
+    }
+
+    @Test
+    public void createScaleFloatFloatFloatMatrix() {
+        Matrix result = new Matrix();
+        Matrix expected = new Matrix(11, 0, 0, 0,
+                                     0, 22, 0, 0,
+                                     0, 0, 33, 0,
+                                     0, 0, 0, 1);
+
+        Matrix.createScale(11, 22, 33, result);
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void createScaleFloatFloatFloatMatrixWithNull() {
+        try {
+            Matrix.createScale(0, 0, 0, null);
+            fail();
+        } catch (ArgumentNullException e) {
+            // expected.
+        }
+    }
+
+    @Test
+    public void createScaleVector3Matrix() {
+        Matrix result = new Matrix();
+        Matrix expected = new Matrix(11, 0, 0, 0,
+                                     0, 22, 0, 0,
+                                     0, 0, 33, 0,
+                                     0, 0, 0, 1);
+
+        Matrix.createScale(new Vector3(11, 22, 33), result);
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void createScaleVector3MatrixWithNull() {
+        try {
+            Matrix.createScale(null, new Matrix());
+            fail();
+        } catch (ArgumentNullException e) {
+            // expected.
+        }
+
+        try {
+            Matrix.createScale(new Vector3(), null);
+            fail();
+        } catch (ArgumentNullException e) {
+            // expected.
+        }
+    }
+
+    @Test
+    public void createScaleFloatMatrix() {
+        Matrix result = new Matrix();
+        Matrix expected = new Matrix(7, 0, 0, 0,
+                                     0, 7, 0, 0,
+                                     0, 0, 7, 0,
+                                     0, 0, 0, 1);
+
+        Matrix.createScale(7, result);
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void createScaleFloatMatrixWithNull() {
+        try {
+            Matrix.createScale(0, null);
+            fail();
+        } catch (ArgumentNullException e) {
+            // expected.
+        }
+    }
+
+    @Test
+    public void createRotationX() {
+        Matrix result = new Matrix();
+        Matrix expected = new Matrix(1, 0, 0, 0,
+                                     0, (float) Math.cos(7), -(float) Math.sin(7), 0,
+                                     0, (float) Math.sin(7), (float) Math.cos(7), 0,
+                                     0, 0, 0, 1);
+
+        Matrix.createRotationX(7, result);
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void createRotationXWithNull() {
+        try {
+            Matrix.createRotationX(0, null);
+            fail();
+        } catch (ArgumentNullException e) {
+            // expected.
+        }
+    }
+
+    @Test
+    public void createRotationY() {
+        Matrix result = new Matrix();
+        Matrix expected = new Matrix((float) Math.cos(7), 0, (float) Math.sin(7), 0,
+                                     0, 1, 0, 0,
+                                     -(float) Math.sin(7), 0, (float) Math.cos(7), 0,
+                                     0, 0, 0, 1);
+
+        Matrix.createRotationY(7, result);
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void createRotationYWithNull() {
+        try {
+            Matrix.createRotationY(0, null);
+            fail();
+        } catch (ArgumentNullException e) {
+            // expected.
+        }
+    }
+
+    @Test
+    public void createRotationZ() {
+        Matrix result = new Matrix();
+        Matrix expected = new Matrix((float) Math.cos(7), -(float) Math.sin(7), 0, 0,
+                                     (float) Math.sin(7), (float) Math.cos(7), 0, 0,
+                                     0, 0, 1, 0,
+                                     0, 0, 0, 1);
+
+        Matrix.createRotationZ(7, result);
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void createRotationZWithNull() {
+        try {
+            Matrix.createRotationZ(0, null);
+            fail();
+        } catch (ArgumentNullException e) {
+            // expected.
+        }
+    }
+
+    @Test
+    public void createFromAxisAngle() {
+        Matrix result = new Matrix();
+
+        float x = 1;
+        float y = 2;
+        float z = 3;
+
+        float m11 = x * x + (float) Math.cos(7) * (1 - x * x);
+        float m12 = x * y - (float) Math.cos(7) * x * y - z * (float) Math.sin(7);
+        float m13 = x * z - (float) Math.cos(7) * x * z + y * (float) Math.sin(7);
+
+        float m21 = y * x - (float) Math.cos(7) * y * x + z * (float) Math.sin(7);
+        float m22 = y * y + (float) Math.cos(7) * (1 - y * y);
+        float m23 = y * z - (float) Math.cos(7) * y * z - x * (float) Math.sin(7);
+
+        float m31 = z * x - (float) Math.cos(7) * z * x - y * (float) Math.sin(7);
+        float m32 = z * y - (float) Math.cos(7) * z * y + x * (float) Math.sin(7);
+        float m33 = z * z + (float) Math.cos(7) * (1 - z * z);
+
+        Matrix expected = new Matrix(m11, m12, m13, 0,
+                                     m21, m22, m23, 0,
+                                     m31, m32, m33, 0,
+                                     0, 0, 0, 1);
+
+        Matrix.createFromAxisAngle(new Vector3(x, y, z), 7, result);
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void createFromAxisAngleWithNull() {
+        try {
+            Matrix.createFromAxisAngle(null, 0, new Matrix());
+            fail();
+        } catch (ArgumentNullException e) {
+            // expected.
+        }
+
+        try {
+            Matrix.createFromAxisAngle(new Vector3(), 0, null);
+            fail();
+        } catch (ArgumentNullException e) {
+            // expected.
+        }
+    }
+
+    @Test
+    public void createFromQuaternion() {
+        Matrix result = new Matrix();
+
+        float x = 2;
+        float y = 3;
+        float z = 4;
+        float w = 1;
+
+        // (1.0f - 2.0f*qy*qy - 2.0f*qz*qz, 2.0f*qx*qy - 2.0f*qz*qw,        2.0f*qx*qz + 2.0f*qy*qw,        0.0f,
+        //  2.0f*qx*qy + 2.0f*qz*qw,        1.0f - 2.0f*qx*qx - 2.0f*qz*qz, 2.0f*qy*qz - 2.0f*qx*qw,        0.0f,
+        //  2.0f*qx*qz - 2.0f*qy*qw,        2.0f*qy*qz + 2.0f*qx*qw,        1.0f - 2.0f*qx*qx - 2.0f*qy*qy, 0.0f,
+        //  0.0f,                           0.0f,                           0.0f,                           1.0f)
+        float m11 = 1 - 2 * y * y - 2 * z * z;
+        float m12 = 2 * x * y - 2 * z * w;
+        float m13 = 2 * x * z + 2 * y * w;
+        float m21 = 2 * x * y + 2 * z * w;
+        float m22 = 1 - 2 * x * x - 2 * z * z;
+        float m23 = 2 * y * z - 2 * x * w;
+        float m31 = 2 * x * z - 2 * y * w;
+        float m32 = 2 * y * z + 2 * x * w;
+        float m33 = 1 - 2 * x * x - 2 * y * y;
+
+        Matrix expected = new Matrix(m11, m12, m13, 0,
+                                     m21, m22, m23, 0,
+                                     m31, m32, m33, 0,
+                                     0, 0, 0, 1);
+
+        Matrix.createFromQuaternion(new Quaternion(x, y, z, w), result);
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void createFromQuaternionWithNull() {
+        try {
+            Matrix.createFromQuaternion(null, new Matrix());
+            fail();
+        } catch (ArgumentNullException e) {
+            // expected.
+        }
+
+        try {
+            Matrix.createFromQuaternion(new Quaternion(), null);
+            fail();
+        } catch (ArgumentNullException e) {
+            // expected.
+        }
+    }
+
+    @Test
     public void add() {
         Matrix left = new Matrix(1, 2, 3, 4,
                                  5, 6, 7, 8,

@@ -148,6 +148,212 @@ public class Matrix {
     }
 
     /**
+     * Creates a translation matrix.
+     *
+     * @param x      The value to translate by on the x-axis.
+     * @param y      The value to translate by on the y-axis.
+     * @param z      The value to translate by on the z-axis.
+     * @param result The matrix that holds the result.
+     */
+    public static void createTranslation(float x, float y, float z, Matrix result) {
+        if (result == null) throw new ArgumentNullException("result");
+
+        result.set(1, 0, 0, x,
+                   0, 1, 0, y,
+                   0, 0, 1, z,
+                   0, 0, 0, 1);
+    }
+
+    /**
+     * Creates a translation matrix.
+     *
+     * @param position Values to translate by on the x, y, and z axes.
+     * @param result   The matrix that holds the result.
+     */
+    public static void createTranslation(Vector3 position, Matrix result) {
+        if (position == null) throw new ArgumentNullException("position");
+        if (result == null) throw new ArgumentNullException("result");
+
+        createTranslation(position.x, position.y, position.z, result);
+    }
+
+    /**
+     * Creates a scale matrix.
+     *
+     * @param x      The value to scale by on the x-axis.
+     * @param y      The value to scale by on the y-axis.
+     * @param z      The value to scale by on the z-axis.
+     * @param result The matrix that holds the result.
+     */
+    public static void createScale(float x, float y, float z, Matrix result) {
+        if (result == null) throw new ArgumentNullException("result");
+
+        result.set(x, 0, 0, 0,
+                   0, y, 0, 0,
+                   0, 0, z, 0,
+                   0, 0, 0, 1);
+    }
+
+    /**
+     * Creates a scale matrix.
+     *
+     * @param scale  Values to scale by on the x, y, and z axes.
+     * @param result The matrix that holds the result.
+     */
+    public static void createScale(Vector3 scale, Matrix result) {
+        if (scale == null) throw new ArgumentNullException("scale");
+        if (result == null) throw new ArgumentNullException("result");
+
+        createScale(scale.x, scale.y, scale.z, result);
+    }
+
+    /**
+     * Creates a scale matrix.
+     *
+     * @param scale  The value to scale by.
+     * @param result The matrix that holds the result.
+     */
+    public static void createScale(float scale, Matrix result) {
+        if (result == null) throw new ArgumentNullException("result");
+
+        createScale(scale, scale, scale, result);
+    }
+
+    /**
+     * Creates a matrix that rotates around the x-axis.
+     *
+     * @param radians The angle to rotate around the x-axis.
+     * @param result  The matrix that holds the result.
+     */
+    public static void createRotationX(float radians, Matrix result) {
+        if (result == null) throw new ArgumentNullException("result");
+
+        float cos = (float) Math.cos(radians);
+        float sin = (float) Math.sin(radians);
+
+        result.set(1, 0, 0, 0,
+                   0, cos, -sin, 0,
+                   0, sin, cos, 0,
+                   0, 0, 0, 1);
+    }
+
+    /**
+     * Creates a matrix that rotates around the y-axis.
+     *
+     * @param radians The angle to rotate around the y-axis.
+     * @param result  The matrix that holds the result.
+     */
+    public static void createRotationY(float radians, Matrix result) {
+        if (result == null) throw new ArgumentNullException("result");
+
+        float cos = (float) Math.cos(radians);
+        float sin = (float) Math.sin(radians);
+
+        result.set(cos, 0, sin, 0,
+                   0, 1, 0, 0,
+                   -sin, 0, cos, 0,
+                   0, 0, 0, 1);
+    }
+
+    /**
+     * Creates a matrix that rotates around the z-axis.
+     *
+     * @param radians The angle to rotate around the z-axis.
+     * @param result  The matrix that holds the result.
+     */
+    public static void createRotationZ(float radians, Matrix result) {
+        if (result == null) throw new ArgumentNullException("result");
+
+        float cos = (float) Math.cos(radians);
+        float sin = (float) Math.sin(radians);
+
+        result.set(cos, -sin, 0, 0,
+                   sin, cos, 0, 0,
+                   0, 0, 1, 0,
+                   0, 0, 0, 1);
+    }
+
+    /**
+     * Creates a matrix that rotates around an arbitrary vector.
+     *
+     * @param axis    The axis to rotate around.
+     * @param radians The angle to rotate around the vector.
+     * @param result  The matrix that holds the result.
+     */
+    public static void createFromAxisAngle(Vector3 axis, float radians, Matrix result) {
+        if (axis == null) throw new ArgumentNullException("axis");
+        if (result == null) throw new ArgumentNullException("result");
+
+        float x = axis.x;
+        float y = axis.y;
+        float z = axis.z;
+        float cos = (float) Math.cos(radians);
+        float sin = (float) Math.sin(radians);
+        float xx = x * x;
+        float yy = y * y;
+        float zz = z * z;
+        float xy = x * y;
+        float xz = x * z;
+        float yz = y * z;
+
+        float m11 = xx + (cos * (1.0f - xx));
+        float m12 = (xy - (cos * xy)) - (sin * z);
+        float m13 = (xz - (cos * xz)) + (sin * y);
+        float m21 = (xy - (cos * xy)) + (sin * z);
+        float m22 = yy + (cos * (1.0f - yy));
+        float m23 = (yz - (cos * yz)) - (sin * x);
+        float m31 = (xz - (cos * xz)) - (sin * y);
+        float m32 = (yz - (cos * yz)) + (sin * x);
+        float m33 = zz + (cos * (1.0f - zz));
+
+        result.set(m11, m12, m13, 0,
+                   m21, m22, m23, 0,
+                   m31, m32, m33, 0,
+                   0, 0, 0, 1);
+    }
+
+    /**
+     * Creates a rotation matrix from a quaternion.
+     *
+     * @param quaternion The quaternion to create the matrix from.
+     * @param result     The matrix that holds the result.
+     */
+    public static void createFromQuaternion(Quaternion quaternion, Matrix result) {
+        if (quaternion == null) throw new ArgumentNullException("quaternion");
+        if (result == null) throw new ArgumentNullException("result");
+
+        // (1.0f - 2.0f*qy*qy - 2.0f*qz*qz, 2.0f*qx*qy - 2.0f*qz*qw,        2.0f*qx*qz + 2.0f*qy*qw,        0.0f,
+        //  2.0f*qx*qy + 2.0f*qz*qw,        1.0f - 2.0f*qx*qx - 2.0f*qz*qz, 2.0f*qy*qz - 2.0f*qx*qw,        0.0f,
+        //  2.0f*qx*qz - 2.0f*qy*qw,        2.0f*qy*qz + 2.0f*qx*qw,        1.0f - 2.0f*qx*qx - 2.0f*qy*qy, 0.0f,
+        //  0.0f,                           0.0f,                           0.0f,                           1.0f)
+
+        float xx = quaternion.x * quaternion.x;
+        float yy = quaternion.y * quaternion.y;
+        float zz = quaternion.z * quaternion.z;
+        float xy = quaternion.x * quaternion.y;
+        float zw = quaternion.z * quaternion.w;
+        float zx = quaternion.z * quaternion.x;
+        float yw = quaternion.y * quaternion.w;
+        float yz = quaternion.y * quaternion.z;
+        float xw = quaternion.x * quaternion.w;
+
+        float m11 = 1.0f - (2.0f * (yy + zz));
+        float m12 = 2.0f * (xy - zw);
+        float m13 = 2.0f * (zx + yw);
+        float m21 = 2.0f * (xy + zw);
+        float m22 = 1.0f - (2.0f * (zz + xx));
+        float m23 = 2.0f * (yz - xw);
+        float m31 = 2.0f * (zx - yw);
+        float m32 = 2.0f * (yz + xw);
+        float m33 = 1.0f - (2.0f * (yy + xx));
+
+        result.set(m11, m12, m13, 0,
+                   m21, m22, m23, 0,
+                   m31, m32, m33, 0,
+                   0, 0, 0, 1);
+    }
+
+    /**
      * Adds two matrices.
      *
      * @param left   The first source matrix.
