@@ -40,56 +40,6 @@ public final class Vector4Test {
     }
 
     @Test
-    public void createOne() {
-        Vector4 vector = Vector4.createOne();
-
-        assertEquals(1, vector.x, 0);
-        assertEquals(1, vector.y, 0);
-        assertEquals(1, vector.z, 0);
-        assertEquals(1, vector.w, 0);
-    }
-
-    @Test
-    public void createUnitX() {
-        Vector4 vector = Vector4.createUnitX();
-
-        assertEquals(1, vector.x, 0);
-        assertEquals(0, vector.y, 0);
-        assertEquals(0, vector.z, 0);
-        assertEquals(0, vector.w, 0);
-    }
-
-    @Test
-    public void createUnitY() {
-        Vector4 vector = Vector4.createUnitY();
-
-        assertEquals(0, vector.x, 0);
-        assertEquals(1, vector.y, 0);
-        assertEquals(0, vector.z, 0);
-        assertEquals(0, vector.w, 0);
-    }
-
-    @Test
-    public void createUnitZ() {
-        Vector4 vector = Vector4.createUnitZ();
-
-        assertEquals(0, vector.x, 0);
-        assertEquals(0, vector.y, 0);
-        assertEquals(1, vector.z, 0);
-        assertEquals(0, vector.w, 0);
-    }
-
-    @Test
-    public void createUnitW() {
-        Vector4 vector = Vector4.createUnitW();
-
-        assertEquals(0, vector.x, 0);
-        assertEquals(0, vector.y, 0);
-        assertEquals(0, vector.z, 0);
-        assertEquals(1, vector.w, 0);
-    }
-
-    @Test
     public void add() {
         Vector4 left = new Vector4(1, 2, 3, 4);
         Vector4 right = new Vector4(5, 6, 7, 8);
@@ -533,29 +483,30 @@ public final class Vector4Test {
 
     @Test
     public void normalize() {
-        Vector4 value = new Vector4(1);
+        Vector4 vector = new Vector4(1);
 
-        value.normalize();
+        Vector4 result = vector.normalize();
 
+        assertTrue(result == vector);
         // length = sqrt(4)
         // inverse = 1 / sqrt(4)
-        assertEquals(1 / (float) Math.sqrt(4), value.x, 0);
-        assertEquals(1 / (float) Math.sqrt(4), value.y, 0);
-        assertEquals(1 / (float) Math.sqrt(4), value.z, 0);
-        assertEquals(1 / (float) Math.sqrt(4), value.w, 0);
+        assertEquals(1 / (float) Math.sqrt(4), vector.x, 0);
+        assertEquals(1 / (float) Math.sqrt(4), vector.y, 0);
+        assertEquals(1 / (float) Math.sqrt(4), vector.z, 0);
+        assertEquals(1 / (float) Math.sqrt(4), vector.w, 0);
     }
 
     @Test
     public void setVector4() {
-        Vector4 value = new Vector4(2, 3, 4, 5);
-        Vector4 result = new Vector4(1);
+        Vector4 vector = new Vector4(1);
 
-        result.set(value);
+        Vector4 result = vector.set(new Vector4(2, 3, 4, 5));
 
-        assertEquals(2, result.x, 0);
-        assertEquals(3, result.y, 0);
-        assertEquals(4, result.z, 0);
-        assertEquals(5, result.w, 0);
+        assertTrue(result == vector);
+        assertEquals(2, vector.x, 0);
+        assertEquals(3, vector.y, 0);
+        assertEquals(4, vector.z, 0);
+        assertEquals(5, vector.w, 0);
     }
 
     @Test
@@ -572,28 +523,30 @@ public final class Vector4Test {
 
     @Test
     public void setFloatFloatFloatFloat() {
-        Vector4 result = new Vector4(1);
+        Vector4 vector = new Vector4(1);
 
-        result.set(2, 3, 4, 5);
+        Vector4 result = vector.set(2, 3, 4, 5);
 
-        assertEquals(2, result.x, 0);
-        assertEquals(3, result.y, 0);
-        assertEquals(4, result.z, 0);
-        assertEquals(5, result.w, 0);
+        assertTrue(result == vector);
+        assertEquals(2, vector.x, 0);
+        assertEquals(3, vector.y, 0);
+        assertEquals(4, vector.z, 0);
+        assertEquals(5, vector.w, 0);
     }
 
     @Test
     public void setFloatArray() {
-        Vector4 result = new Vector4(1);
+        Vector4 vector = new Vector4(1);
 
-        result.set(new float[] {
+        Vector4 resutl = vector.set(new float[] {
                 2, 3, 4, 5
         });
 
-        assertEquals(2, result.x, 0);
-        assertEquals(3, result.y, 0);
-        assertEquals(4, result.z, 0);
-        assertEquals(5, result.w, 0);
+        assertTrue(resutl == vector);
+        assertEquals(2, vector.x, 0);
+        assertEquals(3, vector.y, 0);
+        assertEquals(4, vector.z, 0);
+        assertEquals(5, vector.w, 0);
     }
 
     @Test
@@ -615,16 +568,66 @@ public final class Vector4Test {
         try {
             vector.set(new float[0]);
             fail();
-        } catch (ArgumentNullException e) {
+        } catch (IllegalArgumentException e) {
             // expected.
         }
 
         try {
             vector.set(new float[5]);
             fail();
-        } catch (ArgumentNullException e) {
+        } catch (IllegalArgumentException e) {
             // expected.
         }
+    }
+
+    @Test
+    public void asOne() {
+        Vector4 vector = new Vector4(7);
+
+        Vector4 result = vector.asOne();
+
+        assertTrue(result == vector);
+        assertEquals(new Vector4(1), result);
+    }
+
+    @Test
+    public void asUnitX() {
+        Vector4 vector = new Vector4(7);
+
+        Vector4 result = vector.asUnitX();
+
+        assertTrue(result == vector);
+        assertEquals(new Vector4(1, 0, 0, 0), result);
+    }
+
+    @Test
+    public void asUnitY() {
+        Vector4 vector = new Vector4(7);
+
+        Vector4 result = vector.asUnitY();
+
+        assertTrue(result == vector);
+        assertEquals(new Vector4(0, 1, 0, 0), result);
+    }
+
+    @Test
+    public void asUnitZ() {
+        Vector4 vector = new Vector4(7);
+
+        Vector4 result = vector.asUnitZ();
+
+        assertTrue(result == vector);
+        assertEquals(new Vector4(0, 0, 1, 0), result);
+    }
+
+    @Test
+    public void asUnitW() {
+        Vector4 vector = new Vector4(7);
+
+        Vector4 result = vector.asUnitW();
+
+        assertTrue(result == vector);
+        assertEquals(new Vector4(0, 0, 0, 1), result);
     }
 
     @Test

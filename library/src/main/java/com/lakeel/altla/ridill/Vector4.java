@@ -60,51 +60,6 @@ public class Vector4 {
     }
 
     /**
-     * Creates a vector (1, 1, 1, 1).
-     *
-     * @return The vector (1, 1, 1, 1).
-     */
-    public static Vector4 createOne() {
-        return new Vector4(1);
-    }
-
-    /**
-     * Creates a x unit vector (1, 0, 0, 0).
-     *
-     * @return The vector (1, 0, 0, 0).
-     */
-    public static Vector4 createUnitX() {
-        return new Vector4(1, 0, 0, 0);
-    }
-
-    /**
-     * Creates a y unit vector (0, 1, 0, 0).
-     *
-     * @return The vector (0, 1, 0, 0).
-     */
-    public static Vector4 createUnitY() {
-        return new Vector4(0, 1, 0, 0);
-    }
-
-    /**
-     * Creates a z unit vector (0, 0, 1, 0).
-     *
-     * @return The vector (0, 0, 1, 0).
-     */
-    public static Vector4 createUnitZ() {
-        return new Vector4(0, 0, 1, 0);
-    }
-
-    /**
-     * Creates a w unit vector (0, 0, 0, 1).
-     *
-     * @return The vector (0, 0, 0, 1).
-     */
-    public static Vector4 createUnitW() {
-        return new Vector4(0, 0, 0, 1);
-    }
-
-    /**
      * Adds two vectors.
      *
      * @param left   The first source vector.
@@ -301,8 +256,10 @@ public class Vector4 {
 
     /**
      * Turns the current vector into a unit vector.
+     *
+     * @return This instance.
      */
-    public void normalize() {
+    public Vector4 normalize() {
         float length = length();
         if (0 < length) {
             float inverse = 1.0f / length;
@@ -311,18 +268,19 @@ public class Vector4 {
             z *= inverse;
             w *= inverse;
         }
+        return this;
     }
 
     /**
      * Sets the components of the specified vector into this ones.
      *
      * @param value The source vector.
+     * @return This instance.
      */
-    public void set(Vector4 value) {
-        x = value.x;
-        y = value.y;
-        z = value.z;
-        w = value.w;
+    public Vector4 set(Vector4 value) {
+        if (value == null) throw new ArgumentNullException("value");
+
+        return set(value.x, value.y, value.z, value.w);
     }
 
     /**
@@ -332,27 +290,72 @@ public class Vector4 {
      * @param y The value for the y-component.
      * @param z The value for the z-component.
      * @param w The value for the w-component.
+     * @return This instance.
      */
-    public void set(float x, float y, float z, float w) {
+    public Vector4 set(float x, float y, float z, float w) {
         this.x = x;
         this.y = y;
         this.z = z;
         this.w = w;
+        return this;
     }
 
     /**
      * Sets the array into this components.
      *
      * @param values The values for components.
+     * @return This instance.
      */
-    public void set(float[] values) {
+    public Vector4 set(float[] values) {
         if (values == null) throw new ArgumentNullException("values");
         if (values.length != ELEMENT_COUNT) throw new IllegalArgumentException("The length of 'values' must be 4.");
 
-        x = values[0];
-        y = values[1];
-        z = values[2];
-        w = values[3];
+        return set(values[0], values[1], values[2], values[3]);
+    }
+
+    /**
+     * Initializes this instance as the vector (1, 1, 1, 1).
+     *
+     * @return This instance.
+     */
+    public Vector4 asOne() {
+        return set(1, 1, 1, 1);
+    }
+
+    /**
+     * Initializes this instance as the vector (1, 0, 0, 0).
+     *
+     * @return This instance.
+     */
+    public Vector4 asUnitX() {
+        return set(1, 0, 0, 0);
+    }
+
+    /**
+     * Initializes this instance as the vector (0, 1, 0, 0).
+     *
+     * @return This instance.
+     */
+    public Vector4 asUnitY() {
+        return set(0, 1, 0, 0);
+    }
+
+    /**
+     * Initializes this instance as the vector (0, 0, 1, 0).
+     *
+     * @return This instance.
+     */
+    public Vector4 asUnitZ() {
+        return set(0, 0, 1, 0);
+    }
+
+    /**
+     * Initializes this instance as the vector (0, 0, 0, 1).
+     *
+     * @return This instance.
+     */
+    public Vector4 asUnitW() {
+        return set(0, 0, 0, 1);
     }
 
     /**

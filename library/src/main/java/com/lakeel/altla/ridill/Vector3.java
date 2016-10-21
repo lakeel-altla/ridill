@@ -53,96 +53,6 @@ public class Vector3 {
     }
 
     /**
-     * Creates a vector (1, 1, 1).
-     *
-     * @return The vector (1, 1, 1).
-     */
-    public static Vector3 createOne() {
-        return new Vector3(1);
-    }
-
-    /**
-     * Creates a x unit vector (1, 0, 0).
-     *
-     * @return The vector (1, 0, 0).
-     */
-    public static Vector3 createUnitX() {
-        return new Vector3(1, 0, 0);
-    }
-
-    /**
-     * Creates a y unit vector (0, 1, 0).
-     *
-     * @return The vector (0, 1, 0).
-     */
-    public static Vector3 createUnitY() {
-        return new Vector3(0, 1, 0);
-    }
-
-    /**
-     * Creates a z unit vector (0, 0, 1).
-     *
-     * @return The vector (0, 0, 1).
-     */
-    public static Vector3 createUnitZ() {
-        return new Vector3(0, 0, 1);
-    }
-
-    /**
-     * Creates a unit vector designating up (0, 1, 0).
-     *
-     * @return The vector (0, 1, 0).
-     */
-    public static Vector3 createUp() {
-        return new Vector3(0, 1, 0);
-    }
-
-    /**
-     * Creates a unit vector designating down (0, -1, 0).
-     *
-     * @return The uvector (0, -1, 0).
-     */
-    public static Vector3 createDown() {
-        return new Vector3(0, -1, 0);
-    }
-
-    /**
-     * Creates a unit vector designating right (-1, 0, 0).
-     *
-     * @return The vector (-1, 0, 0).
-     */
-    public static Vector3 createLeft() {
-        return new Vector3(-1, 0, 0);
-    }
-
-    /**
-     * Creates a unit vector designating left (1, 0, 0).
-     *
-     * @return The vector (1, 0, 0).
-     */
-    public static Vector3 createRight() {
-        return new Vector3(1, 0, 0);
-    }
-
-    /**
-     * Creates a unit vector designating forward in a right-handed coordinate system (0, 0, −1).
-     *
-     * @return The vector (0, 0, -1).
-     */
-    public static Vector3 createForward() {
-        return new Vector3(0, 0, -1);
-    }
-
-    /**
-     * Creates a unit vector designating backward in a right-handed coordinate system (0, 0, −1).
-     *
-     * @return The vector (0, 0, -1).
-     */
-    public static Vector3 createBackward() {
-        return new Vector3(0, 0, 1);
-    }
-
-    /**
      * Adds two vectors.
      *
      * @param left   The first source vector.
@@ -349,8 +259,10 @@ public class Vector3 {
 
     /**
      * Turns the current vector into a unit vector.
+     *
+     * @return This instance.
      */
-    public void normalize() {
+    public Vector3 normalize() {
         float length = length();
         if (0 < length) {
             float inverse = 1.0f / length;
@@ -358,19 +270,23 @@ public class Vector3 {
             y *= inverse;
             z *= inverse;
         }
+        return this;
     }
 
     /**
      * Sets components of the specified vector into this ones.
      *
      * @param value The source vector.
+     * @return This instance.
      */
-    public void set(Vector3 value) {
+    public Vector3 set(Vector3 value) {
         if (value == null) throw new ArgumentNullException("value");
 
         x = value.x;
         y = value.y;
         z = value.z;
+
+        return this;
     }
 
     /**
@@ -379,25 +295,120 @@ public class Vector3 {
      * @param x The value for the x-component.
      * @param y The value for the y-component.
      * @param z The value for the z-component.
+     * @return This instance.
      */
-    public void set(float x, float y, float z) {
+    public Vector3 set(float x, float y, float z) {
         this.x = x;
         this.y = y;
         this.z = z;
+        return this;
     }
 
     /**
      * Sets the array into this components.
      *
      * @param values The values for components.
+     * @return This instance.
      */
-    public void set(float[] values) {
+    public Vector3 set(float[] values) {
         if (values == null) throw new ArgumentNullException("values");
         if (values.length != ELEMENT_COUNT) throw new IllegalArgumentException("The length of 'values' must be 3.");
 
         x = values[0];
         y = values[1];
         z = values[2];
+
+        return this;
+    }
+
+    /**
+     * Initializes this instance as the vector (1, 1, 1).
+     *
+     * @return This instance.
+     */
+    public Vector3 asOne() {
+        return set(1, 1, 1);
+    }
+
+    /**
+     * Initializes this instance as the vector (1, 0, 0).
+     *
+     * @return This instance.
+     */
+    public Vector3 asUnitX() {
+        return set(1, 0, 0);
+    }
+
+    /**
+     * Initializes this instance as the vector (0, 1, 0).
+     *
+     * @return This instance.
+     */
+    public Vector3 asUnitY() {
+        return set(0, 1, 0);
+    }
+
+    /**
+     * Initializes this instance as the vector (0, 0, 1).
+     *
+     * @return This instance.
+     */
+    public Vector3 asUnitZ() {
+        return set(0, 0, 1);
+    }
+
+    /**
+     * Initializes this instance as the vector (0, 1, 0).
+     *
+     * @return This instance.
+     */
+    public Vector3 asUp() {
+        return set(0, 1, 0);
+    }
+
+    /**
+     * Initializes this instance as the vector (0, -1, 0).
+     *
+     * @return This instance.
+     */
+    public Vector3 asDown() {
+        return set(0, -1, 0);
+    }
+
+    /**
+     * Initializes this instance as the vector (-1, 0, 0).
+     *
+     * @return This instance.
+     */
+    public Vector3 asLeft() {
+        return set(-1, 0, 0);
+    }
+
+    /**
+     * Initializes this instance as the vector (1, 0, 0).
+     *
+     * @return This instance.
+     */
+    public Vector3 asRight() {
+        return set(1, 0, 0);
+    }
+
+    /**
+     * Initializes this instance as the vector (0, 0, -1).
+     *
+     * @return This instance.
+     */
+    public Vector3 asForward() {
+        return set(0, 0, -1);
+    }
+
+    /**
+     * Initializes this instance as the vector (0, 0, 1).
+     *
+     * @return This instance.
+     */
+    public Vector3 asBackward() {
+        return set(0, 0, 1);
     }
 
     /**

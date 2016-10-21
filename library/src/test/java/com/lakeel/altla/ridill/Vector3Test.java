@@ -37,96 +37,6 @@ public final class Vector3Test {
     }
 
     @Test
-    public void createOne() {
-        Vector3 vector = Vector3.createOne();
-
-        assertEquals(1, vector.x, 0);
-        assertEquals(1, vector.y, 0);
-        assertEquals(1, vector.z, 0);
-    }
-
-    @Test
-    public void createUnitX() {
-        Vector3 vector = Vector3.createUnitX();
-
-        assertEquals(1, vector.x, 0);
-        assertEquals(0, vector.y, 0);
-        assertEquals(0, vector.z, 0);
-    }
-
-    @Test
-    public void createUnitY() {
-        Vector3 vector = Vector3.createUnitY();
-
-        assertEquals(0, vector.x, 0);
-        assertEquals(1, vector.y, 0);
-        assertEquals(0, vector.z, 0);
-    }
-
-    @Test
-    public void createUnitZ() {
-        Vector3 vector = Vector3.createUnitZ();
-
-        assertEquals(0, vector.x, 0);
-        assertEquals(0, vector.y, 0);
-        assertEquals(1, vector.z, 0);
-    }
-
-    @Test
-    public void createUp() {
-        Vector3 vector = Vector3.createUp();
-
-        assertEquals(0, vector.x, 0);
-        assertEquals(1, vector.y, 0);
-        assertEquals(0, vector.z, 0);
-    }
-
-    @Test
-    public void createDown() {
-        Vector3 vector = Vector3.createDown();
-
-        assertEquals(0, vector.x, 0);
-        assertEquals(-1, vector.y, 0);
-        assertEquals(0, vector.z, 0);
-    }
-
-    @Test
-    public void createLeft() {
-        Vector3 vector = Vector3.createLeft();
-
-        assertEquals(-1, vector.x, 0);
-        assertEquals(0, vector.y, 0);
-        assertEquals(0, vector.z, 0);
-    }
-
-    @Test
-    public void createRight() {
-        Vector3 vector = Vector3.createRight();
-
-        assertEquals(1, vector.x, 0);
-        assertEquals(0, vector.y, 0);
-        assertEquals(0, vector.z, 0);
-    }
-
-    @Test
-    public void createForward() {
-        Vector3 vector = Vector3.createForward();
-
-        assertEquals(0, vector.x, 0);
-        assertEquals(0, vector.y, 0);
-        assertEquals(-1, vector.z, 0);
-    }
-
-    @Test
-    public void createBackward() {
-        Vector3 vector = Vector3.createBackward();
-
-        assertEquals(0, vector.x, 0);
-        assertEquals(0, vector.y, 0);
-        assertEquals(1, vector.z, 0);
-    }
-
-    @Test
     public void add() {
         Vector3 left = new Vector3(1, 2, 3);
         Vector3 right = new Vector3(4, 5, 6);
@@ -700,27 +610,28 @@ public final class Vector3Test {
 
     @Test
     public void normalize() {
-        Vector3 value = new Vector3(1);
+        Vector3 vector = new Vector3(1);
 
-        value.normalize();
+        Vector3 result = vector.normalize();
 
+        assertTrue(result == vector);
         // length = sqrt(3)
         // inverse = 1 / sqrt(3)
-        assertEquals(1 / (float) Math.sqrt(3), value.x, 0);
-        assertEquals(1 / (float) Math.sqrt(3), value.y, 0);
-        assertEquals(1 / (float) Math.sqrt(3), value.z, 0);
+        assertEquals(1 / (float) Math.sqrt(3), vector.x, 0);
+        assertEquals(1 / (float) Math.sqrt(3), vector.y, 0);
+        assertEquals(1 / (float) Math.sqrt(3), vector.z, 0);
     }
 
     @Test
     public void setVector3() {
-        Vector3 value = new Vector3(2, 3, 4);
-        Vector3 result = new Vector3(1);
+        Vector3 vector = new Vector3(1);
 
-        result.set(value);
+        Vector3 result = vector.set(new Vector3(2, 3, 4));
 
-        assertEquals(2, result.x, 0);
-        assertEquals(3, result.y, 0);
-        assertEquals(4, result.z, 0);
+        assertTrue(result == vector);
+        assertEquals(2, vector.x, 0);
+        assertEquals(3, vector.y, 0);
+        assertEquals(4, vector.z, 0);
     }
 
     @Test
@@ -737,26 +648,28 @@ public final class Vector3Test {
 
     @Test
     public void setFloatFloatFloat() {
-        Vector3 result = new Vector3(1);
+        Vector3 vector = new Vector3(1);
 
-        result.set(2, 3, 4);
+        Vector3 result = vector.set(2, 3, 4);
 
-        assertEquals(2, result.x, 0);
-        assertEquals(3, result.y, 0);
-        assertEquals(4, result.z, 0);
+        assertTrue(result == vector);
+        assertEquals(2, vector.x, 0);
+        assertEquals(3, vector.y, 0);
+        assertEquals(4, vector.z, 0);
     }
 
     @Test
     public void setFloatArray() {
-        Vector3 result = new Vector3(1);
+        Vector3 vector = new Vector3(1);
 
-        result.set(new float[] {
+        Vector3 result = vector.set(new float[] {
                 2, 3, 4
         });
 
-        assertEquals(2, result.x, 0);
-        assertEquals(3, result.y, 0);
-        assertEquals(4, result.z, 0);
+        assertTrue(result == vector);
+        assertEquals(2, vector.x, 0);
+        assertEquals(3, vector.y, 0);
+        assertEquals(4, vector.z, 0);
     }
 
     @Test
@@ -788,6 +701,116 @@ public final class Vector3Test {
         } catch (IllegalArgumentException e) {
             // expected.
         }
+    }
+
+    @Test
+    public void asOne() {
+        Vector3 vector = new Vector3(7);
+        Vector3 expected = new Vector3(1);
+
+        Vector3 result = vector.asOne();
+
+        assertTrue(vector == result);
+        assertEquals(expected, vector);
+    }
+
+    @Test
+    public void asUnitX() {
+        Vector3 vector = new Vector3(7);
+        Vector3 expected = new Vector3(1, 0, 0);
+
+        Vector3 result = vector.asUnitX();
+
+        assertTrue(vector == result);
+        assertEquals(expected, vector);
+    }
+
+    @Test
+    public void asUnitY() {
+        Vector3 vector = new Vector3(7);
+        Vector3 expected = new Vector3(0, 1, 0);
+
+        Vector3 result = vector.asUnitY();
+
+        assertTrue(vector == result);
+        assertEquals(expected, vector);
+    }
+
+    @Test
+    public void asUnitZ() {
+        Vector3 vector = new Vector3(7);
+        Vector3 expected = new Vector3(0, 0, 1);
+
+        Vector3 result = vector.asUnitZ();
+
+        assertTrue(vector == result);
+        assertEquals(expected, vector);
+    }
+
+    @Test
+    public void asUp() {
+        Vector3 vector = new Vector3(7);
+        Vector3 expected = new Vector3(0, 1, 0);
+
+        Vector3 result = vector.asUp();
+
+        assertTrue(vector == result);
+        assertEquals(expected, vector);
+    }
+
+    @Test
+    public void asDown() {
+        Vector3 vector = new Vector3(7);
+        Vector3 expected = new Vector3(0, -1, 0);
+
+        Vector3 result = vector.asDown();
+
+        assertTrue(vector == result);
+        assertEquals(expected, vector);
+    }
+
+    @Test
+    public void asLeft() {
+        Vector3 vector = new Vector3(7);
+        Vector3 expected = new Vector3(-1, 0, 0);
+
+        Vector3 result = vector.asLeft();
+
+        assertTrue(vector == result);
+        assertEquals(expected, vector);
+    }
+
+    @Test
+    public void asRight() {
+        Vector3 vector = new Vector3(7);
+        Vector3 expected = new Vector3(1, 0, 0);
+
+        Vector3 result = vector.asRight();
+
+        assertTrue(vector == result);
+        assertEquals(expected, vector);
+    }
+
+    @Test
+    public void asForward() {
+        Vector3 vector = new Vector3(7);
+        Vector3 expected = new Vector3(0, 0, -1);
+
+        Vector3 result = vector.asForward();
+
+        assertTrue(vector == result);
+        assertEquals(expected, vector);
+    }
+
+    @Test
+    public void asBackward() {
+        Vector3 vector = new Vector3(7);
+        Vector3 expected = new Vector3(0, 0, 1);
+
+        Vector3 result = vector.asBackward();
+
+        assertTrue(vector == result);
+        assertEquals(expected, vector);
     }
 
     @Test
