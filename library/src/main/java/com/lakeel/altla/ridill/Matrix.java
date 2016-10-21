@@ -4,6 +4,7 @@ import java.util.Objects;
 
 /**
  * Defines a matrix.
+ * Ridill uses column vectors when applying matrix multiplications.
  */
 public class Matrix {
 
@@ -252,24 +253,6 @@ public class Matrix {
         result.y = (left.m21 * right.x) + (left.m22 * right.y) + (left.m23 * right.z) + (left.m24 * right.w);
         result.z = (left.m31 * right.x) + (left.m32 * right.y) + (left.m33 * right.z) + (left.m34 * right.w);
         result.w = (left.m41 * right.x) + (left.m42 * right.y) + (left.m43 * right.z) + (left.m44 * right.w);
-    }
-
-    /**
-     * Multiplies the row vector by the matrix.
-     *
-     * @param left   The source row vector.
-     * @param right  The source matrix.
-     * @param result The row vector that holds the result.
-     */
-    public static void multiply(Vector4 left, Matrix right, Vector4 result) {
-        if (left == null) throw new ArgumentNullException("left");
-        if (right == null) throw new ArgumentNullException("right");
-        if (result == null) throw new ArgumentNullException("result");
-
-        result.x = (left.x * right.m11) + (left.y * right.m21) + (left.z * right.m31) + (left.w * right.m41);
-        result.y = (left.x * right.m12) + (left.y * right.m22) + (left.z * right.m32) + (left.w * right.m42);
-        result.z = (left.x * right.m13) + (left.y * right.m23) + (left.z * right.m33) + (left.w * right.m43);
-        result.w = (left.x * right.m14) + (left.y * right.m24) + (left.z * right.m34) + (left.w * right.m44);
     }
 
     /**

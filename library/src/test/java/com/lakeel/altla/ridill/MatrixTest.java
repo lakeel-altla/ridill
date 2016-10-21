@@ -266,47 +266,6 @@ public final class MatrixTest {
     }
 
     @Test
-    public void multiplyVector4MatrixVector4() {
-        Vector4 left = new Vector4(1, 2, 3, 4);
-        Matrix right = new Matrix(11, 12, 13, 14,
-                                  21, 22, 23, 24,
-                                  31, 32, 33, 34,
-                                  41, 42, 43, 44);
-        Vector4 result = new Vector4();
-
-        Matrix.multiply(left, right, result);
-
-        assertEquals((1 * 11) + (2 * 21) + (3 * 31) + (4 * 41), result.x, 0);
-        assertEquals((1 * 12) + (2 * 22) + (3 * 32) + (4 * 42), result.y, 0);
-        assertEquals((1 * 13) + (2 * 23) + (3 * 33) + (4 * 43), result.z, 0);
-        assertEquals((1 * 14) + (2 * 24) + (3 * 34) + (4 * 44), result.w, 0);
-    }
-
-    @Test
-    public void multiplyVector4MatrixVector4WithNull() {
-        try {
-            Matrix.multiply(null, new Matrix(), new Vector4());
-            fail();
-        } catch (ArgumentNullException e) {
-            // expected.
-        }
-
-        try {
-            Matrix.multiply(new Vector4(), null, new Vector4());
-            fail();
-        } catch (ArgumentNullException e) {
-            // expected.
-        }
-
-        try {
-            Matrix.multiply(new Vector4(), new Matrix(), null);
-            fail();
-        } catch (ArgumentNullException e) {
-            // expected.
-        }
-    }
-
-    @Test
     public void transpose() {
         Matrix matrix = new Matrix(11, 12, 13, 14,
                                    21, 22, 23, 24,
