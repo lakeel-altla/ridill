@@ -49,6 +49,41 @@ public class Quaternion {
     }
 
     /**
+     * Creates a quaternion from specified yaw, pitch, and roll angles.
+     *
+     * @param yaw    The yaw angle.
+     * @param pitch  The pitch angle.
+     * @param roll   The roll angle.
+     * @param result The quaternion that holds the result.
+     */
+    public static void createFromYawPitchRoll(float yaw, float pitch, float roll, Quaternion result) {
+        if (result == null) throw new ArgumentNullException("result");
+
+        float halfRoll = roll * 0.5f;
+        float halfPitch = pitch * 0.5f;
+        float halfYaw = yaw * 0.5f;
+
+        float sinRoll = (float) Math.sin(halfRoll);
+        float cosRoll = (float) Math.cos(halfRoll);
+        float sinPitch = (float) Math.sin(halfPitch);
+        float cosPitch = (float) Math.cos(halfPitch);
+        float sinYaw = (float) Math.sin(halfYaw);
+        float cosYaw = (float) Math.cos(halfYaw);
+
+        // from jMonkey
+//        result.w = (cosRoll * cosPitch * cosYaw) - (sinRoll * sinPitch * sinYaw);
+//        result.x = (cosRoll * cosPitch + sinYaw) + (sinRoll * sinPitch * cosYaw);
+//        result.y = (sinRoll * cosPitch * cosYaw) + (cosRoll * sinPitch * sinYaw);
+//        result.z = (cosRoll * sinPitch * cosYaw) - (sinRoll * cosPitch * sinYaw);
+
+        // from SharpDX
+        result.w = (cosRoll * cosPitch * cosYaw) + (sinRoll * sinPitch * sinYaw);
+        result.x = (cosRoll * sinPitch * cosYaw) + (sinRoll * cosPitch * sinYaw);
+        result.y = (cosRoll * cosPitch * sinYaw) - (sinRoll * sinPitch * cosYaw);
+        result.z = (sinRoll * cosPitch * cosYaw) - (cosRoll * sinPitch * sinYaw);
+    }
+
+    /**
      * Creates the conjugate of a specified quaternion.
      *
      * @param value  The source quaternion.
