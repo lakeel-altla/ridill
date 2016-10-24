@@ -584,6 +584,43 @@ public final class Vector3Test {
     }
 
     @Test
+    public void transformQuaternionVector3Vector3() {
+        Vector3 result = new Vector3();
+        float tolerance = 0.0001f;
+
+        // Quaternion (1, 0, 0, 0) means the rotating 180 degree in yaw (around x-axis).
+        Vector3.transform(new Vector3(0, -1, 0), new Quaternion(1, 0, 0, 0), result);
+
+        assertEquals(0, result.x, tolerance);
+        assertEquals(1, result.y, tolerance);
+        assertEquals(0, result.z, tolerance);
+    }
+
+    @Test
+    public void transformQuaternionVector3Vector3WithNull() {
+        try {
+            Vector3.transform(null, new Quaternion(), new Vector3());
+            fail();
+        } catch (ArgumentNullException e) {
+            // expected.
+        }
+
+        try {
+            Vector3.transform(new Vector3(), null, new Vector3());
+            fail();
+        } catch (ArgumentNullException e) {
+            // expected.
+        }
+
+        try {
+            Vector3.transform(new Vector3(), new Quaternion(), null);
+            fail();
+        } catch (ArgumentNullException e) {
+            // expected.
+        }
+    }
+
+    @Test
     public void lengthSquared() {
         Vector3 value = new Vector3(1);
 

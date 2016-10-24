@@ -465,6 +465,44 @@ public final class Vector4Test {
     }
 
     @Test
+    public void transformQuaternionVector4Vector4() {
+        Vector4 result = new Vector4();
+        float tolerance = 0.0001f;
+
+        // Quaternion (1, 0, 0, 0) means the rotating 180 degree in yaw (around x-axis).
+        Vector4.transform(new Vector4(0, -1, 0, 1), new Quaternion(1, 0, 0, 0), result);
+
+        assertEquals(0, result.x, tolerance);
+        assertEquals(1, result.y, tolerance);
+        assertEquals(0, result.z, tolerance);
+        assertEquals(1, result.w, tolerance);
+    }
+
+    @Test
+    public void transformQuaternionVector4Vector4WithNull() {
+        try {
+            Vector4.transform(null, new Quaternion(), new Vector4());
+            fail();
+        } catch (ArgumentNullException e) {
+            // expected.
+        }
+
+        try {
+            Vector4.transform(new Vector4(), null, new Vector4());
+            fail();
+        } catch (ArgumentNullException e) {
+            // expected.
+        }
+
+        try {
+            Vector4.transform(new Vector4(), new Quaternion(), null);
+            fail();
+        } catch (ArgumentNullException e) {
+            // expected.
+        }
+    }
+
+    @Test
     public void lengthSquared() {
         Vector4 value = new Vector4(1);
 

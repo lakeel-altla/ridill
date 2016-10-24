@@ -240,6 +240,48 @@ public class Vector3 {
     }
 
     /**
+     * Transforms the vector by the quaternion.
+     *
+     * @param vector     The vector to transform.
+     * @param quaternion The quaternion to apply.
+     * @param result     The vector that holds the result.
+     */
+    public static void transform(Vector3 vector, Quaternion quaternion, Vector3 result) {
+        if (vector == null) throw new ArgumentNullException("vector");
+        if (quaternion == null) throw new ArgumentNullException("quaternion");
+        if (result == null) throw new ArgumentNullException("result");
+
+        // (1.0f - 2.0f*qy*qy - 2.0f*qz*qz, 2.0f*qx*qy - 2.0f*qz*qw,        2.0f*qx*qz + 2.0f*qy*qw,        0.0f,
+        //  2.0f*qx*qy + 2.0f*qz*qw,        1.0f - 2.0f*qx*qx - 2.0f*qz*qz, 2.0f*qy*qz - 2.0f*qx*qw,        0.0f,
+        //  2.0f*qx*qz - 2.0f*qy*qw,        2.0f*qy*qz + 2.0f*qx*qw,        1.0f - 2.0f*qx*qx - 2.0f*qy*qy, 0.0f,
+        //  0.0f,                           0.0f,                           0.0f,                           1.0f)
+
+        float xx = quaternion.x * quaternion.x;
+        float yy = quaternion.y * quaternion.y;
+        float zz = quaternion.z * quaternion.z;
+        float xy = quaternion.x * quaternion.y;
+        float zw = quaternion.z * quaternion.w;
+        float zx = quaternion.z * quaternion.x;
+        float yw = quaternion.y * quaternion.w;
+        float yz = quaternion.y * quaternion.z;
+        float xw = quaternion.x * quaternion.w;
+
+        float m11 = 1.0f - (2.0f * (yy + zz));
+        float m12 = 2.0f * (xy - zw);
+        float m13 = 2.0f * (zx + yw);
+        float m21 = 2.0f * (xy + zw);
+        float m22 = 1.0f - (2.0f * (zz + xx));
+        float m23 = 2.0f * (yz - xw);
+        float m31 = 2.0f * (zx - yw);
+        float m32 = 2.0f * (yz + xw);
+        float m33 = 1.0f - (2.0f * (yy + xx));
+
+        result.x = m11 * vector.x + m12 * vector.y + m13 * vector.z;
+        result.y = m21 * vector.y + m22 * vector.y + m23 * vector.z;
+        result.z = m31 * vector.z + m32 * vector.y + m33 * vector.z;
+    }
+
+    /**
      * Calculates the length of the vector squared.
      *
      * @return The length of the vector squared.
