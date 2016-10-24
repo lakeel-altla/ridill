@@ -93,6 +93,49 @@ public class Quaternion {
         result.z = (sinRoll * cosPitch * cosYaw) - (cosRoll * sinPitch * sinYaw);
     }
 
+    public static void createFromRotationMatrix(Matrix matrix, Quaternion result) {
+        if (matrix == null) throw new ArgumentNullException("matrix");
+        if (result == null) throw new ArgumentNullException("result");
+
+        float sqrt;
+        float half;
+        float scale = matrix.m11 + matrix.m22 + matrix.m33;
+
+        if (scale > 0.0f) {
+            sqrt = (float) Math.sqrt(scale + 1.0f);
+            result.w = sqrt * 0.5f;
+            sqrt = 0.5f / sqrt;
+
+            result.x = (matrix.m32 - matrix.m23) * sqrt;
+            result.y = (matrix.m13 - matrix.m31) * sqrt;
+            result.z = (matrix.m21 - matrix.m12) * sqrt;
+        } else if ((matrix.m11 >= matrix.m22) && (matrix.m11 >= matrix.m33)) {
+            sqrt = (float) Math.sqrt(1.0f + matrix.m11 - matrix.m22 - matrix.m33);
+            half = 0.5f / sqrt;
+
+            result.x = 0.5f * sqrt;
+            result.y = (matrix.m21 + matrix.m12) * half;
+            result.z = (matrix.m31 + matrix.m13) * half;
+            result.w = (matrix.m32 - matrix.m23) * half;
+        } else if (matrix.m22 > matrix.m33) {
+            sqrt = (float) Math.sqrt(1.0f + matrix.m22 - matrix.m11 - matrix.m33);
+            half = 0.5f / sqrt;
+
+            result.x = (matrix.m12 + matrix.m21) * half;
+            result.y = 0.5f * sqrt;
+            result.z = (matrix.m23 + matrix.m32) * half;
+            result.w = (matrix.m13 - matrix.m31) * half;
+        } else {
+            sqrt = (float) Math.sqrt(1.0f + matrix.m33 - matrix.m11 - matrix.m22);
+            half = 0.5f / sqrt;
+
+            result.x = (matrix.m13 + matrix.m31) * half;
+            result.y = (matrix.m23 + matrix.m32) * half;
+            result.z = 0.5f * sqrt;
+            result.w = (matrix.m21 - matrix.m12) * half;
+        }
+    }
+
     /**
      * Creates the conjugate of a specified quaternion.
      *

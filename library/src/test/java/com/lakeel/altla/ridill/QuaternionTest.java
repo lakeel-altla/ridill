@@ -63,6 +63,45 @@ public final class QuaternionTest {
     }
 
     @Test
+    public void createFromRotationMatrix() {
+        float yaw = (float) Math.toRadians(90);
+        float pitch = (float) Math.toRadians(90);
+        float roll = (float) Math.toRadians(90);
+        float tolerance = 0.0001f;
+
+        Quaternion quaternion = new Quaternion();
+        Quaternion.createFromYawPitchRoll(yaw, pitch, roll, quaternion);
+
+        Matrix matrix = new Matrix();
+        Matrix.createFromQuaternion(quaternion, matrix);
+
+        Quaternion result = new Quaternion();
+        Quaternion.createFromRotationMatrix(matrix, result);
+
+        assertEquals(quaternion.x, result.x, tolerance);
+        assertEquals(quaternion.y, result.y, tolerance);
+        assertEquals(quaternion.z, result.z, tolerance);
+        assertEquals(quaternion.w, result.w, tolerance);
+    }
+
+    @Test
+    public void createFromRotationMatrixWithNull() {
+        try {
+            Quaternion.createFromRotationMatrix(null, new Quaternion());
+            fail();
+        } catch (ArgumentNullException e) {
+            // expected.
+        }
+
+        try {
+            Quaternion.createFromRotationMatrix(new Matrix().asIdentity(), null);
+            fail();
+        } catch (ArgumentNullException e) {
+            // expected.
+        }
+    }
+
+    @Test
     public void conjugateQuaternionQuaternion() {
         Quaternion source = new Quaternion(1, 2, 3, 4);
         Quaternion result = new Quaternion();
