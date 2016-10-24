@@ -407,6 +407,110 @@ public class Matrix {
     }
 
     /**
+     * Creates a perspective projection matrix.
+     *
+     * @param left   The minimum x-value of the view volume at the near view plane.
+     * @param right  The maximum x-value of the view volume at the near view plane.
+     * @param bottom The minimum y-value of the view volume at the near view plane.
+     * @param top    The maximum y-value of the view volume at the near view plane.
+     * @param near   The distance to the near view plane.
+     * @param far    The istance to of the far view plane.
+     * @param result The matrix that holds the result.
+     */
+    public static void createPerspectiveOffCenter(float left, float right, float bottom, float top,
+                                                  float near, float far, Matrix result) {
+        if (result == null) throw new ArgumentNullException("result");
+
+        // glFrustum code:
+        // | 2n / (r - l),            0,  (r + l) / (r - l),              0 |
+        // |            0, 2n / (t - b),  (t + b) / (t - b),              0 |
+        // |            0,            0, -(f + n) / (f - n), -2fn / (f - n) |
+        // |            0,            0,                 -1,              0 |
+
+        float invWidth = 1.0f / (right - left);
+        float invHeight = 1.0f / (top - bottom);
+        float invDepth = 1.0f / (far - near);
+
+        float m11 = 2.0f * near * invWidth;
+        float m13 = (right + left) * invWidth;
+        float m22 = 2.0f * near * invHeight;
+        float m23 = (top + bottom) * invHeight;
+        float m33 = -(far + near) * invDepth;
+        float m34 = -(2.0f * far * near) * invDepth;
+        float m43 = -1.0f;
+
+        result.set(m11, 0, m13, 0,
+                   0, m22, m23, 0,
+                   0, 0, m33, m34,
+                   0, 0, m43, 0);
+    }
+
+    /**
+     * Creates a perspective projection matrix.
+     *
+     * @param width  The width of the view volume at the near view plane.
+     * @param height The height of the view volume at the near view plane.
+     * @param near   The distance to the near view plane.
+     * @param far    The istance to of the far view plane.
+     * @param result The matrix that holds the result.
+     */
+    public static void createPerspective(float width, float height, float near, float far, Matrix result) {
+        if (result == null) throw new ArgumentNullException("result");
+
+        // equals to createPerspectiveOffCenter(-w/2, w/2, -h/2, h/2, n, f)
+
+        float invWidth = 1.0f / width;
+        float invHeight = 1.0f / height;
+        float invDepth = 1.0f / (far - near);
+
+        float m11 = (2.0f * near) * invWidth;
+        float m22 = (2.0f * near) * invHeight;
+        float m33 = -(far + near) * invDepth;
+        float m34 = -(2.0f * far * near) * invDepth;
+        float m43 = -1.0f;
+
+        result.set(m11, 0, 0, 0,
+                   0, m22, 0, 0,
+                   0, 0, m33, m34,
+                   0, 0, m43, 0);
+    }
+
+    /**
+     * Creates a perspective projection matrix based on a field of view.
+     *
+     * @param fov         The field of view in the y direction, in radians.
+     * @param aspectRatio The aspect ratio, defined as view space width divided by height.
+     * @param near        The distance to the near view plane.
+     * @param far         The istance to of the far view plane.
+     * @param result      The matrix that holds the result.
+     */
+    public static void createPerspectiveFieldOfView(float fov, float aspectRatio, float near, float far,
+                                                    Matrix result) {
+        if (result == null) throw new ArgumentNullException("result");
+
+        // yScale = 1/tan(fov/2)
+        // xScale = yScale/aspectRatio
+        // w = 2*n/xScale
+        // h = 2*n/yScale
+        // equals to createPerspectiveOffCenter(-w/2, w/2, -h/2, h/2, n, f)
+
+        float yScale = (float) (1.0f / Math.tan(fov * 0.5f));
+        float xScale = yScale / aspectRatio;
+        float invDepth = 1.0f / (far - near);
+
+        float m11 = xScale;
+        float m22 = yScale;
+        float m33 = -(far + near) * invDepth;
+        float m34 = -(2.0f * far * near) * invDepth;
+        float m43 = -1.0f;
+
+        result.set(m11, 0, 0, 0,
+                   0, m22, 0, 0,
+                   0, 0, m33, m34,
+                   0, 0, m43, 0);
+    }
+
+    /**
      * Adds two matrices.
      *
      * @param left   The first source matrix.

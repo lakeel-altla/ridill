@@ -371,6 +371,171 @@ public final class MatrixTest {
     }
 
     @Test
+    public void createPerspectiveOffCenter() {
+        // glFrustum code:
+        // | 2n / (r - l),            0,  (r + l) / (r - l),              0 |
+        // |            0, 2n / (t - b),  (t + b) / (t - b),              0 |
+        // |            0,            0, -(f + n) / (f - n), -2fn / (f - n) |
+        // |            0,            0,                 -1,              0 |
+
+        float r = -4;
+        float l = 5;
+        float t = 8;
+        float b = 1;
+        float n = 1;
+        float f = 10;
+        float tolerance = 0.0001f;
+
+        Matrix result = new Matrix();
+        Matrix.createPerspectiveOffCenter(l, r, b, t, n, f, result);
+
+        assertEquals(2 * n / (r - l), result.m11, tolerance);
+        assertEquals(0, result.m12, tolerance);
+        assertEquals((r + l) / (r - l), result.m13, tolerance);
+        assertEquals(0, result.m14, tolerance);
+
+        assertEquals(0, result.m21, tolerance);
+        assertEquals(2 * n / (t - b), result.m22, tolerance);
+        assertEquals((t + b) / (t - b), result.m23, tolerance);
+        assertEquals(0, result.m24, tolerance);
+
+        assertEquals(0, result.m31, tolerance);
+        assertEquals(0, result.m32, tolerance);
+        assertEquals(-(f + n) / (f - n), result.m33, tolerance);
+        assertEquals(-2 * f * n / (f - n), result.m34, tolerance);
+
+        assertEquals(0, result.m41, tolerance);
+        assertEquals(0, result.m42, tolerance);
+        assertEquals(-1, result.m43, tolerance);
+        assertEquals(0, result.m44, tolerance);
+    }
+
+    @Test
+    public void createPerspectiveOffCenterWithNull() {
+        try {
+            Matrix.createPerspectiveOffCenter(-1, 1, -1, 1, 0, 1, null);
+            fail();
+        } catch (ArgumentNullException e) {
+            // expected.
+        }
+    }
+
+    @Test
+    public void createPerspective() {
+        // glFrustum code:
+        // | 2n / (r - l),            0,  (r + l) / (r - l),              0 |
+        // |            0, 2n / (t - b),  (t + b) / (t - b),              0 |
+        // |            0,            0, -(f + n) / (f - n), -2fn / (f - n) |
+        // |            0,            0,                 -1,              0 |
+
+        // createPerspective(...) equals to createPerspectiveOffCenter(-w/2, w/2, -h/2, h/2, n, f)
+
+        float w = 30;
+        float h = 20;
+        float n = 1;
+        float f = 10;
+        float tolerance = 0.0001f;
+
+        Matrix result = new Matrix();
+        Matrix.createPerspective(w, h, n, f, result);
+
+        Matrix expected = new Matrix();
+        Matrix.createPerspectiveOffCenter(-w / 2, w / 2, -h / 2, h / 2, n, f, expected);
+
+        assertEquals(expected.m11, result.m11, tolerance);
+        assertEquals(expected.m12, result.m12, tolerance);
+        assertEquals(expected.m13, result.m13, tolerance);
+        assertEquals(expected.m14, result.m14, tolerance);
+
+        assertEquals(expected.m21, result.m21, tolerance);
+        assertEquals(expected.m22, result.m22, tolerance);
+        assertEquals(expected.m23, result.m23, tolerance);
+        assertEquals(expected.m24, result.m24, tolerance);
+
+        assertEquals(expected.m31, result.m31, tolerance);
+        assertEquals(expected.m32, result.m32, tolerance);
+        assertEquals(expected.m33, result.m33, tolerance);
+        assertEquals(expected.m34, result.m34, tolerance);
+
+        assertEquals(expected.m41, result.m41, tolerance);
+        assertEquals(expected.m42, result.m42, tolerance);
+        assertEquals(expected.m43, result.m43, tolerance);
+        assertEquals(expected.m44, result.m44, tolerance);
+    }
+
+    @Test
+    public void createPerspectiveWithNull() {
+        try {
+            Matrix.createPerspective(1, 1, 0, 1, null);
+            fail();
+        } catch (ArgumentNullException e) {
+            // expected.
+        }
+    }
+
+    @Test
+    public void createPerspectiveFieldOfView() {
+        // glFrustum code:
+        // | 2n / (r - l),            0,  (r + l) / (r - l),              0 |
+        // |            0, 2n / (t - b),  (t + b) / (t - b),              0 |
+        // |            0,            0, -(f + n) / (f - n), -2fn / (f - n) |
+        // |            0,            0,                 -1,              0 |
+
+        // yScale = 1/tan(fov/2)
+        // xScale = yScale/aspectRatio
+        // w = 2*n/xScale
+        // h = 2*n/yScale
+        // equals to createPerspectiveOffCenter(-w/2, w/2, -h/2, h/2, n, f)
+
+        float fov = (float) Math.PI / 2;
+        float aspectRatio = 16 / 9;
+        float near = 1;
+        float far = 1000;
+        float tolerance = 0.0001f;
+
+        Matrix result = new Matrix();
+        Matrix.createPerspectiveFieldOfView(fov, aspectRatio, near, far, result);
+
+        float yScale = 1 / (float) Math.tan(fov / 2);
+        float xScale = yScale / aspectRatio;
+        float w = 2 * near / xScale;
+        float h = 2 * near / yScale;
+
+        Matrix expected = new Matrix();
+        Matrix.createPerspectiveOffCenter(-w / 2, w / 2, -h / 2, h / 2, near, far, expected);
+
+        assertEquals(expected.m11, result.m11, tolerance);
+        assertEquals(expected.m12, result.m12, tolerance);
+        assertEquals(expected.m13, result.m13, tolerance);
+        assertEquals(expected.m14, result.m14, tolerance);
+
+        assertEquals(expected.m21, result.m21, tolerance);
+        assertEquals(expected.m22, result.m22, tolerance);
+        assertEquals(expected.m23, result.m23, tolerance);
+        assertEquals(expected.m24, result.m24, tolerance);
+
+        assertEquals(expected.m31, result.m31, tolerance);
+        assertEquals(expected.m32, result.m32, tolerance);
+        assertEquals(expected.m33, result.m33, tolerance);
+        assertEquals(expected.m34, result.m34, tolerance);
+
+        assertEquals(expected.m41, result.m41, tolerance);
+        assertEquals(expected.m42, result.m42, tolerance);
+        assertEquals(expected.m43, result.m43, tolerance);
+        assertEquals(expected.m44, result.m44, tolerance);
+    }
+
+    @Test
+    public void createPerspectiveFieldOfViewWithNull() {
+        try {
+            Matrix.createPerspectiveFieldOfView(1, 1, 0, 1, null);
+            fail();
+        } catch (ArgumentNullException e) {
+            // expected.
+        }
+    }
+
+    @Test
     public void lookAt() {
         Matrix result = new Matrix();
         float tolerance = 0.0001f;
