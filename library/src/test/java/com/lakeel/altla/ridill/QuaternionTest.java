@@ -153,6 +153,16 @@ public final class QuaternionTest {
     }
 
     @Test
+    public void asIdentity() {
+        Quaternion quaternion = new Quaternion(1, 2, 3, 4);
+        Quaternion expected = new Quaternion(0, 0, 0, 1);
+
+        Quaternion result = quaternion.asIdentity();
+
+        assertEquals(expected, result);
+    }
+
+    @Test
     public void equals() {
         Quaternion left = new Quaternion(1, 2, 3, 4);
         Quaternion right = new Quaternion(1, 2, 3, 4);
