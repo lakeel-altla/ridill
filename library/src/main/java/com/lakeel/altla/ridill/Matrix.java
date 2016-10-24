@@ -1,5 +1,6 @@
 package com.lakeel.altla.ridill;
 
+import com.lakeel.altla.ridill.pool.MatrixPool;
 import com.lakeel.altla.ridill.pool.Vector3Pool;
 
 import java.util.Objects;
@@ -575,6 +576,56 @@ public class Matrix {
                    0, m22, 0, 0,
                    0, 0, m33, m34,
                    0, 0, 0, m44);
+    }
+
+    /**
+     * Extracts the scalar, translation, and rotation components from a scale/rotate/translate Matrix.
+     *
+     * @param scale       The scalar component of the transform matrix.
+     * @param rotation    The rotation component of the transform matrix.
+     * @param translation The translation component of the transform matrix.
+     * @return true if the Matrix can be decomposed; false otherwise.
+     */
+    public boolean decompose(Vector3 scale, Quaternion rotation, Vector3 translation) {
+        if (scale == null) throw new ArgumentNullException("scale");
+        if (rotation == null) throw new ArgumentNullException("rotation");
+        if (translation == null) throw new ArgumentNullException("translation");
+
+        translation.set(m14, m24, m34);
+
+        //Scaling is the length of the rows.
+        scale.x = (float) Math.sqrt((m11 * m11) + (m21 * m21) + (m31 * m31));
+        scale.y = (float) Math.sqrt((m12 * m12) + (m22 * m22) + (m32 * m32));
+        scale.z = (float) Math.sqrt((m13 * m13) + (m23 * m23) + (m33 * m33));
+
+        //If any of the scaling factors are zero, than the rotation Matrix can not exist.
+        if (Math.abs(scale.x) == 0 || Math.abs(scale.y) == 0 || Math.abs(scale.z) == 0) {
+            rotation.asIdentity();
+            return false;
+        }
+
+        //The rotation is the left over Matrix after dividing out the scaling.
+        Matrix rotationMatrix = MatrixPool.getInstance().borrowObject();
+
+        rotationMatrix.m11 = m11 / scale.x;
+        rotationMatrix.m21 = m21 / scale.x;
+        rotationMatrix.m31 = m31 / scale.x;
+
+        rotationMatrix.m12 = m12 / scale.y;
+        rotationMatrix.m22 = m22 / scale.y;
+        rotationMatrix.m32 = m32 / scale.y;
+
+        rotationMatrix.m13 = m13 / scale.z;
+        rotationMatrix.m23 = m23 / scale.z;
+        rotationMatrix.m33 = m33 / scale.z;
+
+        rotationMatrix.m44 = 1f;
+
+        Quaternion.createFromRotationMatrix(rotationMatrix, rotation);
+
+        MatrixPool.getInstance().returnObject(rotationMatrix);
+
+        return true;
     }
 
     /**

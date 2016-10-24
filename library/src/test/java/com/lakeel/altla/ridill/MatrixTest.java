@@ -641,6 +641,100 @@ public final class MatrixTest {
     }
 
     @Test
+    public void decompose() {
+        float tolerance = 0.0001f;
+
+        Vector3 scaleVector = new Vector3(2, 3, 4);
+
+        Quaternion quaternion = new Quaternion();
+        float yaw = (float) Math.toRadians(90);
+        float pitch = (float) Math.toRadians(90);
+        float roll = (float) Math.toRadians(90);
+        Quaternion.createFromYawPitchRoll(yaw, pitch, roll, quaternion);
+
+        Vector3 translationVector = new Vector3(10, 20, 30);
+
+        Matrix scale = new Matrix();
+        Matrix.createScale(scaleVector, scale);
+
+        Matrix rotation = new Matrix();
+        Matrix.createFromQuaternion(quaternion, rotation);
+
+        Matrix translation = new Matrix();
+        Matrix.createTranslation(translationVector, translation);
+
+        Matrix temp = new Matrix();
+        Matrix.multiply(translation, rotation, temp);
+        Matrix transform = new Matrix();
+        Matrix.multiply(temp, scale, transform);
+
+        Vector3 resultScale = new Vector3();
+        Quaternion resultRotation = new Quaternion();
+        Vector3 resultTranslation = new Vector3();
+        boolean result = transform.decompose(resultScale, resultRotation, resultTranslation);
+
+        assertTrue(result);
+
+        assertEquals(scaleVector.x, resultScale.x, tolerance);
+        assertEquals(scaleVector.y, resultScale.y, tolerance);
+        assertEquals(scaleVector.z, resultScale.z, tolerance);
+
+        assertEquals(quaternion.x, resultRotation.x, tolerance);
+        assertEquals(quaternion.y, resultRotation.y, tolerance);
+        assertEquals(quaternion.z, resultRotation.z, tolerance);
+        assertEquals(quaternion.w, resultRotation.w, tolerance);
+
+        assertEquals(translationVector.x, resultTranslation.x, tolerance);
+        assertEquals(translationVector.y, resultTranslation.y, tolerance);
+        assertEquals(translationVector.z, resultTranslation.z, tolerance);
+    }
+
+    @Test
+    public void decomposeWithNoRotationMatrix() {
+        boolean result1 = new Matrix(0, 1, 1, 0,
+                                     0, 1, 1, 0,
+                                     0, 1, 1, 0,
+                                     0, 0, 0, 1).decompose(new Vector3(), new Quaternion(), new Vector3());
+        assertFalse(result1);
+
+        boolean result2 = new Matrix(1, 0, 1, 0,
+                                     1, 0, 1, 0,
+                                     1, 0, 1, 0,
+                                     0, 0, 0, 1).decompose(new Vector3(), new Quaternion(), new Vector3());
+        assertFalse(result2);
+
+        boolean result3 = new Matrix(1, 1, 0, 0,
+                                     1, 1, 0, 0,
+                                     1, 1, 0, 0,
+                                     0, 0, 0, 1).decompose(new Vector3(), new Quaternion(), new Vector3());
+        assertFalse(result3);
+    }
+
+    @Test
+    public void decomposeWithNull() {
+        try {
+            new Matrix().decompose(null, new Quaternion(), new Vector3());
+            fail();
+        } catch (ArgumentNullException e) {
+            // expected.
+        }
+
+        try {
+            new Matrix().decompose(new Vector3(), null, new Vector3());
+            fail();
+        } catch (ArgumentNullException e) {
+            // expected.
+        }
+
+        try {
+            new Matrix().decompose(new Vector3(), new Quaternion(), null);
+            fail();
+        } catch (ArgumentNullException e) {
+            // expected.
+        }
+    }
+
+    @Test
     public void lookAt() {
         Matrix result = new Matrix();
         float tolerance = 0.0001f;
