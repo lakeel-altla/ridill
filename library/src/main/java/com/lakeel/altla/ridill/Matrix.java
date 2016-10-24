@@ -511,6 +511,73 @@ public class Matrix {
     }
 
     /**
+     * Creates an orthogonal projection matrix.
+     *
+     * @param left   The minimum x-value of the view volume at the near view plane.
+     * @param right  The maximum x-value of the view volume at the near view plane.
+     * @param bottom The minimum y-value of the view volume at the near view plane.
+     * @param top    The maximum y-value of the view volume at the near view plane.
+     * @param near   The distance to the near view plane.
+     * @param far    The istance to of the far view plane.
+     * @param result The matrix that holds the result.
+     */
+    public static void createOrthographicOffCenter(float left, float right, float bottom, float top,
+                                                   float near, float far, Matrix result) {
+        if (result == null) throw new ArgumentNullException("result");
+
+        // glOrtho code:
+        // | 2 / (r - l),           0,            0, (r + l) / (r - l) |
+        // |           0, 2 / (t - b),            0, (t + b) / (t - b) |
+        // |           0,           0, -2 / (f - n), (f + n) / (f - n) |
+        // |           0,           0,            0,                 1 |
+
+        float invWidth = 1.0f / (right - left);
+        float invHeight = 1.0f / (top - bottom);
+        float invDepth = 1.0f / (far - near);
+
+        float m11 = 2.0f * invWidth;
+        float m14 = (right + left) * invWidth;
+        float m22 = 2.0f * invHeight;
+        float m24 = (top + bottom) * invHeight;
+        float m33 = -2.0f * invDepth;
+        float m34 = (far + near) * invDepth;
+        float m44 = 1.0f;
+
+        result.set(m11, 0, 0, m14,
+                   0, m22, 0, m24,
+                   0, 0, m33, m34,
+                   0, 0, 0, m44);
+    }
+
+    /**
+     * Creates an orthogonal projection matrix.
+     *
+     * @param width  The width of the view volume at the near view plane.
+     * @param height The height of the view volume at the near view plane.
+     * @param near   The distance to the near view plane.
+     * @param far    The istance to of the far view plane.
+     * @param result The matrix that holds the result.
+     */
+    public static void createOrthographic(float width, float height, float near, float far, Matrix result) {
+        if (result == null) throw new ArgumentNullException("result");
+
+        // equals to createOrthographicOffCenter(-w/2, w/2, -h/2, h/2, n, f).
+
+        float invDepth = 1.0f / (far - near);
+
+        float m11 = 2.0f / width;
+        float m22 = 2.0f / height;
+        float m33 = -2.0f * invDepth;
+        float m34 = (far + near) * invDepth;
+        float m44 = 1.0f;
+
+        result.set(m11, 0, 0, 0,
+                   0, m22, 0, 0,
+                   0, 0, m33, m34,
+                   0, 0, 0, m44);
+    }
+
+    /**
      * Adds two matrices.
      *
      * @param left   The first source matrix.
