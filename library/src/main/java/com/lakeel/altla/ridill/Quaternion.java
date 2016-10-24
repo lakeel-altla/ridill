@@ -53,13 +53,15 @@ public class Quaternion {
     /**
      * Creates a quaternion from specified yaw, pitch, and roll angles.
      *
-     * @param yaw    The yaw angle.
-     * @param pitch  The pitch angle.
-     * @param roll   The roll angle.
+     * @param yaw    The yaw angle in radians.
+     * @param pitch  The pitch angle in radians.
+     * @param roll   The roll angle in radians.
      * @param result The quaternion that holds the result.
      */
     public static void createFromYawPitchRoll(float yaw, float pitch, float roll, Quaternion result) {
         if (result == null) throw new ArgumentNullException("result");
+
+        // angles (x,y,z) aka (pitch, yaw, roll)
 
         float halfRoll = roll * 0.5f;
         float halfPitch = pitch * 0.5f;
@@ -72,13 +74,19 @@ public class Quaternion {
         float sinYaw = (float) Math.sin(halfYaw);
         float cosYaw = (float) Math.cos(halfYaw);
 
-        // from jMonkey
-//        result.w = (cosRoll * cosPitch * cosYaw) - (sinRoll * sinPitch * sinYaw);
-//        result.x = (cosRoll * cosPitch + sinYaw) + (sinRoll * sinPitch * cosYaw);
-//        result.y = (sinRoll * cosPitch * cosYaw) + (cosRoll * sinPitch * sinYaw);
-//        result.z = (cosRoll * sinPitch * cosYaw) - (sinRoll * cosPitch * sinYaw);
+        // jMonkeyEngine may use x-z-y order.
+        // pitch (x) -> roll (z) -> yaw (y)
 
-        // from SharpDX
+        // SharpDX may use z-x-y order.
+        // roll (z) -> pitch (x) -> yaw (y)
+
+        // jMonkeyEngine style
+//        result.w = (cosRoll * cosPitch * cosYaw - sinRoll * sinPitch * sinYaw);
+//        result.x = (cosRoll * sinPitch * cosYaw + sinRoll * cosPitch * sinYaw);
+//        result.y = (cosRoll * cosPitch * sinYaw + sinRoll * sinPitch * cosYaw);
+//        result.z = (sinRoll * cosPitch * cosYaw - cosRoll * sinPitch * sinYaw);
+
+        // SharpDX style
         result.w = (cosRoll * cosPitch * cosYaw) + (sinRoll * sinPitch * sinYaw);
         result.x = (cosRoll * sinPitch * cosYaw) + (sinRoll * cosPitch * sinYaw);
         result.y = (cosRoll * cosPitch * sinYaw) - (sinRoll * sinPitch * cosYaw);

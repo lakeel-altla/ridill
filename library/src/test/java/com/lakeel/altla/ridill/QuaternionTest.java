@@ -31,6 +31,38 @@ public final class QuaternionTest {
     }
 
     @Test
+    public void createFromYawPitchRoll() {
+        float yaw = (float) Math.toRadians(90);
+        float pitch = (float) Math.toRadians(90);
+        float roll = (float) Math.toRadians(90);
+
+        Quaternion result = new Quaternion();
+        Quaternion.createFromYawPitchRoll(yaw, pitch, roll, result);
+
+        float w = ((float) Math.cos(roll * 0.5f) * (float) Math.cos(pitch * 0.5f) * (float) Math.cos(yaw * 0.5f)) +
+                  ((float) Math.sin(roll * 0.5f) * (float) Math.sin(pitch * 0.5f) * (float) Math.sin(yaw * 0.5f));
+        float x = ((float) Math.cos(roll * 0.5f) * (float) Math.sin(pitch * 0.5f) * (float) Math.cos(yaw * 0.5f)) +
+                  ((float) Math.sin(roll * 0.5f) * (float) Math.cos(pitch * 0.5f) * (float) Math.sin(yaw * 0.5f));
+        float y = ((float) Math.cos(roll * 0.5f) * (float) Math.cos(pitch * 0.5f) * (float) Math.sin(yaw * 0.5f)) -
+                  ((float) Math.sin(roll * 0.5f) * (float) Math.sin(pitch * 0.5f) * (float) Math.cos(yaw * 0.5f));
+        float z = ((float) Math.sin(roll * 0.5f) * (float) Math.cos(pitch * 0.5f) * (float) Math.cos(yaw * 0.5f)) -
+                  ((float) Math.cos(roll * 0.5f) * (float) Math.sin(pitch * 0.5f) * (float) Math.sin(yaw * 0.5f));
+        Quaternion expected = new Quaternion(x, y, z, w);
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void createFromYawPitchRollWithNull() {
+        try {
+            Quaternion.createFromYawPitchRoll(0, 0, 0, null);
+            fail();
+        } catch (ArgumentNullException e) {
+            // expected.
+        }
+    }
+
+    @Test
     public void conjugateQuaternionQuaternion() {
         Quaternion source = new Quaternion(1, 2, 3, 4);
         Quaternion result = new Quaternion();
