@@ -633,6 +633,26 @@ public final class Vector4Test {
     }
 
     @Test
+    public void setVector3Float() {
+        Vector4 vector = new Vector4();
+
+        Vector4 result = vector.set(new Vector3(1, 2, 3), 4);
+
+        assertSame(vector, result);
+        assertEquals(new Vector4(1, 2, 3, 4), result);
+    }
+
+    @Test
+    public void setVector3FloatWithNull() {
+        try {
+            new Vector4().set(null, 0);
+            fail();
+        } catch (ArgumentNullException e) {
+            // expected.
+        }
+    }
+
+    @Test
     public void asZero() {
         Vector4 vector = new Vector4(7);
 

@@ -367,6 +367,19 @@ public class Vector4 {
     }
 
     /**
+     * Sets x, y, and z from the vector and w into this components.
+     *
+     * @param vector3 The vector containing values to set x, y, and z components.
+     * @param w       The w-component.
+     * @return This instance.
+     */
+    public Vector4 set(Vector3 vector3, float w) {
+        if (vector3 == null) throw new ArgumentNullException("vector3");
+
+        return set(vector3.x, vector3.y, vector3.z, w);
+    }
+
+    /**
      * Initializes this instance as the vector (0, 0, 0, 0).
      *
      * @return This instance.
