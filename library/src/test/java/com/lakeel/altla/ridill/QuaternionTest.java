@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -59,12 +60,64 @@ public final class QuaternionTest {
 
     @Test
     public void conjugate() {
-        Quaternion result = new Quaternion(1, 2, 3, 4);
+        Quaternion quaternion = new Quaternion(1, 2, 3, 4);
         Quaternion expected = new Quaternion(-1, -2, -3, 4);
 
-        result.conjugate();
+        Quaternion result = quaternion.conjugate();
 
-        assertEquals(expected, result);
+        assertSame(quaternion, result);
+        assertEquals(expected, quaternion);
+    }
+
+    @Test
+    public void setFloatFloatFloatFloat() {
+        Quaternion quaternion = new Quaternion();
+        Quaternion expected = new Quaternion(1, 2, 3, 4);
+
+        Quaternion result = quaternion.set(1, 2, 3, 4);
+
+        assertSame(quaternion, result);
+        assertEquals(expected, quaternion);
+    }
+
+    @Test
+    public void setFloatArray() {
+        Quaternion quaternion = new Quaternion();
+        Quaternion expected = new Quaternion(1, 2, 3, 4);
+
+        Quaternion result = quaternion.set(new float[] {
+                1, 2, 3, 4
+        });
+
+        assertSame(quaternion, result);
+        assertEquals(expected, quaternion);
+    }
+
+    @Test
+    public void setFloatArrayWithNull() {
+        try {
+            new Quaternion().set(null);
+            fail();
+        } catch (ArgumentNullException e) {
+            // expected.
+        }
+    }
+
+    @Test
+    public void setFloatArrayWithInvalidLengthArray() {
+        try {
+            new Quaternion().set(new float[0]);
+            fail();
+        } catch (IllegalArgumentException e) {
+            // expected.
+        }
+
+        try {
+            new Quaternion().set(new float[5]);
+            fail();
+        } catch (IllegalArgumentException e) {
+            // expected.
+        }
     }
 
     @Test

@@ -7,6 +7,8 @@ import java.util.Objects;
  */
 public class Quaternion {
 
+    public static final int ELEMENT_COUNT = 4;
+
     /**
      * The x-component.
      */
@@ -101,11 +103,53 @@ public class Quaternion {
 
     /**
      * Transforms this into its conjugate.
+     *
+     * @return This instance.
      */
-    public void conjugate() {
+    public Quaternion conjugate() {
         x = -x;
         y = -y;
         z = -z;
+        return this;
+    }
+
+    /**
+     * Sets values into this quaternion.
+     *
+     * @param x The x-value.
+     * @param y The y-value.
+     * @param z The z-value.
+     * @param w The w-value.
+     * @return This instance.
+     */
+    public Quaternion set(float x, float y, float z, float w) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        this.w = w;
+        return this;
+    }
+
+    /**
+     * Set values (x, y, z, w) as the array into this quaternion.
+     *
+     * @param values The values (x, y, z, w).
+     * @return This instance.
+     */
+    public Quaternion set(float[] values) {
+        if (values == null) throw new ArgumentNullException("values");
+        if (values.length != ELEMENT_COUNT) throw new IllegalArgumentException("The length of 'values' must be 4.");
+
+        return set(values[0], values[1], values[2], values[3]);
+    }
+
+    /**
+     * Initializes this instance as the quaternion (0, 0, 0, 1).
+     *
+     * @return This instance.
+     */
+    public Quaternion asIdentity() {
+        return set(0, 0, 0, 1);
     }
 
     @Override
