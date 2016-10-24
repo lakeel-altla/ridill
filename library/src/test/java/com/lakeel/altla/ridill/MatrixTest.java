@@ -5,6 +5,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -766,7 +767,7 @@ public final class MatrixTest {
 
         Matrix result = matrix.set(value);
 
-        assertTrue(result == matrix);
+        assertSame(matrix, result);
         assertEquals(expected, matrix);
     }
 
@@ -793,7 +794,7 @@ public final class MatrixTest {
                                    31, 32, 33, 34,
                                    41, 42, 43, 44);
 
-        assertTrue(result == matrix);
+        assertSame(matrix, result);
         assertEquals(expected, matrix);
     }
 
@@ -811,7 +812,7 @@ public final class MatrixTest {
                                      31, 32, 33, 34,
                                      41, 42, 43, 44);
 
-        assertTrue(result == matrix);
+        assertSame(matrix, result);
         assertEquals(expected, matrix);
     }
 
@@ -856,7 +857,7 @@ public final class MatrixTest {
                                      31, 32, 33, 34,
                                      41, 42, 43, 44);
 
-        assertTrue(result == matrix);
+        assertSame(matrix, result);
         assertEquals(expected, matrix);
     }
 
@@ -897,7 +898,7 @@ public final class MatrixTest {
 
         Matrix result = matrix.asZero();
 
-        assertTrue(result == matrix);
+        assertSame(matrix, result);
         assertEquals(expected, matrix);
     }
 
@@ -914,7 +915,7 @@ public final class MatrixTest {
 
         Matrix result = matrix.asIdentity();
 
-        assertTrue(result == matrix);
+        assertSame(matrix, result);
         assertEquals(expected, matrix);
     }
 

@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -614,7 +615,7 @@ public final class Vector3Test {
 
         Vector3 result = vector.normalize();
 
-        assertTrue(result == vector);
+        assertSame(vector, result);
         // length = sqrt(3)
         // inverse = 1 / sqrt(3)
         assertEquals(1 / (float) Math.sqrt(3), vector.x, 0);
@@ -628,7 +629,7 @@ public final class Vector3Test {
 
         Vector3 result = vector.set(new Vector3(2, 3, 4));
 
-        assertTrue(result == vector);
+        assertSame(vector, result);
         assertEquals(2, vector.x, 0);
         assertEquals(3, vector.y, 0);
         assertEquals(4, vector.z, 0);
@@ -652,7 +653,7 @@ public final class Vector3Test {
 
         Vector3 result = vector.set(2, 3, 4);
 
-        assertTrue(result == vector);
+        assertSame(vector, result);
         assertEquals(2, vector.x, 0);
         assertEquals(3, vector.y, 0);
         assertEquals(4, vector.z, 0);
@@ -664,7 +665,7 @@ public final class Vector3Test {
 
         Vector3 result = vector.set(7);
 
-        assertTrue(result == vector);
+        assertSame(vector, result);
         assertEquals(7, vector.x, 0);
         assertEquals(7, vector.y, 0);
         assertEquals(7, vector.z, 0);
@@ -678,7 +679,7 @@ public final class Vector3Test {
                 2, 3, 4
         });
 
-        assertTrue(result == vector);
+        assertSame(vector, result);
         assertEquals(2, vector.x, 0);
         assertEquals(3, vector.y, 0);
         assertEquals(4, vector.z, 0);
@@ -722,7 +723,7 @@ public final class Vector3Test {
 
         Vector3 result = vector.asZero();
 
-        assertTrue(vector == result);
+        assertSame(vector, result);
         assertEquals(expected, vector);
     }
 
@@ -733,7 +734,7 @@ public final class Vector3Test {
 
         Vector3 result = vector.asOne();
 
-        assertTrue(vector == result);
+        assertSame(vector, result);
         assertEquals(expected, vector);
     }
 
@@ -744,7 +745,7 @@ public final class Vector3Test {
 
         Vector3 result = vector.asUnitX();
 
-        assertTrue(vector == result);
+        assertSame(vector, result);
         assertEquals(expected, vector);
     }
 
@@ -755,7 +756,7 @@ public final class Vector3Test {
 
         Vector3 result = vector.asUnitY();
 
-        assertTrue(vector == result);
+        assertSame(vector, result);
         assertEquals(expected, vector);
     }
 
@@ -766,7 +767,7 @@ public final class Vector3Test {
 
         Vector3 result = vector.asUnitZ();
 
-        assertTrue(vector == result);
+        assertSame(vector, result);
         assertEquals(expected, vector);
     }
 
@@ -777,7 +778,7 @@ public final class Vector3Test {
 
         Vector3 result = vector.asUp();
 
-        assertTrue(vector == result);
+        assertSame(vector, result);
         assertEquals(expected, vector);
     }
 
@@ -788,7 +789,7 @@ public final class Vector3Test {
 
         Vector3 result = vector.asDown();
 
-        assertTrue(vector == result);
+        assertSame(vector, result);
         assertEquals(expected, vector);
     }
 
@@ -799,7 +800,7 @@ public final class Vector3Test {
 
         Vector3 result = vector.asLeft();
 
-        assertTrue(vector == result);
+        assertSame(vector, result);
         assertEquals(expected, vector);
     }
 
@@ -810,7 +811,7 @@ public final class Vector3Test {
 
         Vector3 result = vector.asRight();
 
-        assertTrue(vector == result);
+        assertSame(vector, result);
         assertEquals(expected, vector);
     }
 
@@ -821,7 +822,7 @@ public final class Vector3Test {
 
         Vector3 result = vector.asForward();
 
-        assertTrue(vector == result);
+        assertSame(vector, result);
         assertEquals(expected, vector);
     }
 
@@ -832,7 +833,7 @@ public final class Vector3Test {
 
         Vector3 result = vector.asBackward();
 
-        assertTrue(vector == result);
+        assertSame(vector, result);
         assertEquals(expected, vector);
     }
 
@@ -863,7 +864,7 @@ public final class Vector3Test {
         Vector3 vector = new Vector3();
 
         try {
-            vector.toArray(new float[] { });
+            vector.toArray(new float[] {});
             fail();
         } catch (IllegalArgumentException e) {
             //expected.

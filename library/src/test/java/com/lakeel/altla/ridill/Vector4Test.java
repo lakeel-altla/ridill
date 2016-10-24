@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -487,7 +488,7 @@ public final class Vector4Test {
 
         Vector4 result = vector.normalize();
 
-        assertTrue(result == vector);
+        assertSame(vector, result);
         // length = sqrt(4)
         // inverse = 1 / sqrt(4)
         assertEquals(1 / (float) Math.sqrt(4), vector.x, 0);
@@ -502,7 +503,7 @@ public final class Vector4Test {
 
         Vector4 result = vector.set(new Vector4(2, 3, 4, 5));
 
-        assertTrue(result == vector);
+        assertSame(vector, result);
         assertEquals(2, vector.x, 0);
         assertEquals(3, vector.y, 0);
         assertEquals(4, vector.z, 0);
@@ -527,7 +528,7 @@ public final class Vector4Test {
 
         Vector4 result = vector.set(2, 3, 4, 5);
 
-        assertTrue(result == vector);
+        assertSame(vector, result);
         assertEquals(2, vector.x, 0);
         assertEquals(3, vector.y, 0);
         assertEquals(4, vector.z, 0);
@@ -540,7 +541,7 @@ public final class Vector4Test {
 
         Vector4 result = vector.set(7);
 
-        assertTrue(result == vector);
+        assertSame(vector, result);
         assertEquals(7, vector.x, 0);
         assertEquals(7, vector.y, 0);
         assertEquals(7, vector.z, 0);
@@ -551,11 +552,11 @@ public final class Vector4Test {
     public void setFloatArray() {
         Vector4 vector = new Vector4(1);
 
-        Vector4 resutl = vector.set(new float[] {
+        Vector4 result = vector.set(new float[] {
                 2, 3, 4, 5
         });
 
-        assertTrue(resutl == vector);
+        assertSame(vector, result);
         assertEquals(2, vector.x, 0);
         assertEquals(3, vector.y, 0);
         assertEquals(4, vector.z, 0);
@@ -599,7 +600,7 @@ public final class Vector4Test {
 
         Vector4 result = vector.asZero();
 
-        assertTrue(result == vector);
+        assertSame(vector, result);
         assertEquals(new Vector4(), result);
     }
 
@@ -609,7 +610,7 @@ public final class Vector4Test {
 
         Vector4 result = vector.asOne();
 
-        assertTrue(result == vector);
+        assertSame(vector, result);
         assertEquals(new Vector4(1), result);
     }
 
@@ -619,7 +620,7 @@ public final class Vector4Test {
 
         Vector4 result = vector.asUnitX();
 
-        assertTrue(result == vector);
+        assertSame(vector, result);
         assertEquals(new Vector4(1, 0, 0, 0), result);
     }
 
@@ -629,7 +630,7 @@ public final class Vector4Test {
 
         Vector4 result = vector.asUnitY();
 
-        assertTrue(result == vector);
+        assertSame(vector, result);
         assertEquals(new Vector4(0, 1, 0, 0), result);
     }
 
@@ -639,7 +640,7 @@ public final class Vector4Test {
 
         Vector4 result = vector.asUnitZ();
 
-        assertTrue(result == vector);
+        assertSame(vector, result);
         assertEquals(new Vector4(0, 0, 1, 0), result);
     }
 
@@ -649,7 +650,7 @@ public final class Vector4Test {
 
         Vector4 result = vector.asUnitW();
 
-        assertTrue(result == vector);
+        assertSame(vector, result);
         assertEquals(new Vector4(0, 0, 0, 1), result);
     }
 
