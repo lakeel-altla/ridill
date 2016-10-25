@@ -1007,6 +1007,195 @@ public class Matrix {
     }
 
     /**
+     * Gets the translation vector.
+     *
+     * @param result The vector that holds the result.
+     */
+    public void getTranslation(Vector3 result) {
+        if (result == null) throw new ArgumentNullException("result");
+
+        result.set(m14, m24, m34);
+    }
+
+    /**
+     * Sets the translation vector.
+     *
+     * @param value The translation vector.
+     * @return This instance.
+     */
+    public Matrix setTranslation(Vector3 value) {
+        if (value == null) throw new ArgumentNullException("value");
+
+        m14 = value.x;
+        m24 = value.y;
+        m34 = value.z;
+
+        return this;
+    }
+
+    /**
+     * Gets the right vector.
+     *
+     * @param result The vector that holds the result.
+     */
+    public void getRight(Vector3 result) {
+        if (result == null) throw new ArgumentNullException("result");
+
+        result.set(m11, m21, m31);
+    }
+
+    /**
+     * Sets the right vector.
+     *
+     * @param value The right vector.
+     * @return This instance.
+     */
+    public Matrix setRight(Vector3 value) {
+        if (value == null) throw new ArgumentNullException("value");
+
+        m11 = value.x;
+        m21 = value.y;
+        m31 = value.z;
+
+        return this;
+    }
+
+    /**
+     * Gets the left vector.
+     *
+     * @param result The vector that holds the result.
+     */
+    public void getLeft(Vector3 result) {
+        if (result == null) throw new ArgumentNullException("result");
+
+        result.set(-m11, -m21, -m31);
+    }
+
+    /**
+     * Sets the left vector.
+     *
+     * @param value The left vector.
+     * @return This instance.
+     */
+    public Matrix setLeft(Vector3 value) {
+        if (value == null) throw new ArgumentNullException("value");
+
+        m11 = -value.x;
+        m21 = -value.y;
+        m31 = -value.z;
+
+        return this;
+    }
+
+    /**
+     * Gets the down vector.
+     *
+     * @param result The vector that holds the result.
+     */
+    public void getDown(Vector3 result) {
+        if (result == null) throw new ArgumentNullException("result");
+
+        result.set(m12, m22, m32);
+    }
+
+    /**
+     * Sets the down vector.
+     *
+     * @param value The down vector.
+     * @return This instance.
+     */
+    public Matrix setDown(Vector3 value) {
+        if (value == null) throw new ArgumentNullException("value");
+
+        m12 = value.x;
+        m22 = value.y;
+        m32 = value.z;
+
+        return this;
+    }
+
+    /**
+     * Gets the up vector.
+     *
+     * @param result The vector that holds the result.
+     */
+    public void getUp(Vector3 result) {
+        if (result == null) throw new ArgumentNullException("result");
+
+        result.set(-m12, -m22, -m32);
+    }
+
+    /**
+     * Sets the up vector.
+     *
+     * @param value The up vector.
+     * @return This instance.
+     */
+    public Matrix setUp(Vector3 value) {
+        if (value == null) throw new ArgumentNullException("value");
+
+        m12 = -value.x;
+        m22 = -value.y;
+        m32 = -value.z;
+
+        return this;
+    }
+
+    /**
+     * Gets the backward vector.
+     *
+     * @param result The vector that holds the result.
+     */
+    public void getBackward(Vector3 result) {
+        if (result == null) throw new ArgumentNullException("result");
+
+        result.set(m13, m23, m33);
+    }
+
+    /**
+     * Sets the backward vector.
+     *
+     * @param value The backward vector.
+     * @return This instance.
+     */
+    public Matrix setBackward(Vector3 value) {
+        if (value == null) throw new ArgumentNullException("value");
+
+        m13 = value.x;
+        m23 = value.y;
+        m33 = value.z;
+
+        return this;
+    }
+
+    /**
+     * Gets the forward vector.
+     *
+     * @param result The vector that holds the result.
+     */
+    public void getForward(Vector3 result) {
+        if (result == null) throw new ArgumentNullException("result");
+
+        result.set(-m13, -m23, -m33);
+    }
+
+    /**
+     * Sets the forward vector.
+     *
+     * @param value The forward vector.
+     * @return This instance.
+     */
+    public Matrix setForward(Vector3 value) {
+        if (value == null) throw new ArgumentNullException("value");
+
+        m13 = -value.x;
+        m23 = -value.y;
+        m33 = -value.z;
+
+        return this;
+    }
+
+    /**
      * Copies values into the array in row-major order.
      *
      * @param result The array that holds the result.

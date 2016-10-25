@@ -1284,6 +1284,335 @@ public final class MatrixTest {
     }
 
     @Test
+    public void getTranslation() {
+        Matrix matrix = new Matrix(0, 0, 0, 14,
+                                   0, 0, 0, 24,
+                                   0, 0, 0, 34,
+                                   0, 0, 0, 0);
+
+        Vector3 result = new Vector3();
+        matrix.getTranslation(result);
+
+        assertEquals(new Vector3(14, 24, 34), result);
+    }
+
+    @Test
+    public void getTranslationWithNull() {
+        try {
+            new Matrix().getTranslation(null);
+            fail();
+        } catch (ArgumentNullException e) {
+            // expected.
+        }
+    }
+
+    @Test
+    public void setTranslation() {
+        Matrix matrix = new Matrix();
+        Matrix expected = new Matrix(0, 0, 0, 14,
+                                     0, 0, 0, 24,
+                                     0, 0, 0, 34,
+                                     0, 0, 0, 0);
+
+        Matrix result = matrix.setTranslation(new Vector3(14, 24, 34));
+
+        assertSame(matrix, result);
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void setTranslationWithNull() {
+        try {
+            new Matrix().setTranslation(null);
+            fail();
+        } catch (ArgumentNullException e) {
+            // expected.
+        }
+    }
+
+    @Test
+    public void getRight() {
+        Matrix matrix = new Matrix(11, 0, 0, 0,
+                                   21, 0, 0, 0,
+                                   31, 0, 0, 0,
+                                   0, 0, 0, 0);
+
+        Vector3 result = new Vector3();
+        matrix.getRight(result);
+
+        assertEquals(new Vector3(11, 21, 31), result);
+    }
+
+    @Test
+    public void getRightWithNull() {
+        try {
+            new Matrix().getRight(null);
+            fail();
+        } catch (ArgumentNullException e) {
+            // expected.
+        }
+    }
+
+    @Test
+    public void setRight() {
+        Matrix matrix = new Matrix();
+        Matrix expected = new Matrix(11, 0, 0, 0,
+                                     12, 0, 0, 0,
+                                     13, 0, 0, 0,
+                                     0, 0, 0, 0);
+
+        Matrix result = matrix.setRight(new Vector3(11, 12, 13));
+
+        assertSame(matrix, result);
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void setRightWithNull() {
+        try {
+            new Matrix().setRight(null);
+            fail();
+        } catch (ArgumentNullException e) {
+            // expected.
+        }
+    }
+
+    @Test
+    public void getLeft() {
+        Matrix matrix = new Matrix(11, 0, 0, 0,
+                                   21, 0, 0, 0,
+                                   31, 0, 0, 0,
+                                   0, 0, 0, 0);
+
+        Vector3 result = new Vector3();
+        matrix.getLeft(result);
+
+        assertEquals(new Vector3(-11, -21, -31), result);
+    }
+
+    @Test
+    public void getLeftWithNull() {
+        try {
+            new Matrix().getLeft(null);
+            fail();
+        } catch (ArgumentNullException e) {
+            // expected.
+        }
+    }
+
+    @Test
+    public void setLeft() {
+        Matrix matrix = new Matrix();
+        Matrix expected = new Matrix(-11, 0, 0, 0,
+                                     -12, 0, 0, 0,
+                                     -13, 0, 0, 0,
+                                     0, 0, 0, 0);
+
+        Matrix result = matrix.setLeft(new Vector3(11, 12, 13));
+
+        assertSame(matrix, result);
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void setLeftWithNull() {
+        try {
+            new Matrix().setLeft(null);
+            fail();
+        } catch (ArgumentNullException e) {
+            // expected.
+        }
+    }
+
+    @Test
+    public void getDown() {
+        Matrix matrix = new Matrix(0, 12, 0, 0,
+                                   0, 22, 0, 0,
+                                   0, 32, 0, 0,
+                                   0, 0, 0, 0);
+
+        Vector3 result = new Vector3();
+        matrix.getDown(result);
+
+        assertEquals(new Vector3(12, 22, 32), result);
+    }
+
+    @Test
+    public void getDownWithNull() {
+        try {
+            new Matrix().getDown(null);
+            fail();
+        } catch (ArgumentNullException e) {
+            // expected.
+        }
+    }
+
+    @Test
+    public void setDown() {
+        Matrix matrix = new Matrix();
+        Matrix expected = new Matrix(0, 12, 0, 0,
+                                     0, 22, 0, 0,
+                                     0, 32, 0, 0,
+                                     0, 0, 0, 0);
+
+        Matrix result = matrix.setDown(new Vector3(12, 22, 32));
+
+        assertSame(matrix, result);
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void setDownWithNull() {
+        try {
+            new Matrix().setRight(null);
+            fail();
+        } catch (ArgumentNullException e) {
+            // expected.
+        }
+    }
+
+    @Test
+    public void getUp() {
+        Matrix matrix = new Matrix(0, 12, 0, 0,
+                                   0, 22, 0, 0,
+                                   0, 32, 0, 0,
+                                   0, 0, 0, 0);
+
+        Vector3 result = new Vector3();
+        matrix.getUp(result);
+
+        assertEquals(new Vector3(-12, -22, -32), result);
+    }
+
+    @Test
+    public void getUpWithNull() {
+        try {
+            new Matrix().getUp(null);
+            fail();
+        } catch (ArgumentNullException e) {
+            // expected.
+        }
+    }
+
+    @Test
+    public void setUp() {
+        Matrix matrix = new Matrix();
+        Matrix expected = new Matrix(0, -12, 0, 0,
+                                     0, -22, 0, 0,
+                                     0, -32, 0, 0,
+                                     0, 0, 0, 0);
+
+        Matrix result = matrix.setUp(new Vector3(12, 22, 32));
+
+        assertSame(matrix, result);
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void setUpWithNull() {
+        try {
+            new Matrix().setUp(null);
+            fail();
+        } catch (ArgumentNullException e) {
+            // expected.
+        }
+    }
+
+    @Test
+    public void getBackward() {
+        Matrix matrix = new Matrix(0, 0, 13, 0,
+                                   0, 0, 23, 0,
+                                   0, 0, 33, 0,
+                                   0, 0, 0, 0);
+
+        Vector3 result = new Vector3();
+        matrix.getBackward(result);
+
+        assertEquals(new Vector3(13, 23, 33), result);
+    }
+
+    @Test
+    public void getBackwardWithNull() {
+        try {
+            new Matrix().getBackward(null);
+            fail();
+        } catch (ArgumentNullException e) {
+            // expected.
+        }
+    }
+
+    @Test
+    public void setBackward() {
+        Matrix matrix = new Matrix();
+        Matrix expected = new Matrix(0, 0, 13, 0,
+                                     0, 0, 23, 0,
+                                     0, 0, 33, 0,
+                                     0, 0, 0, 0);
+
+        Matrix result = matrix.setBackward(new Vector3(13, 23, 33));
+
+        assertSame(matrix, result);
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void setBackwardWithNull() {
+        try {
+            new Matrix().setBackward(null);
+            fail();
+        } catch (ArgumentNullException e) {
+            // expected.
+        }
+    }
+
+    @Test
+    public void getForward() {
+        Matrix matrix = new Matrix(0, 0, 13, 0,
+                                   0, 0, 23, 0,
+                                   0, 0, 33, 0,
+                                   0, 0, 0, 0);
+
+        Vector3 result = new Vector3();
+        matrix.getForward(result);
+
+        assertEquals(new Vector3(-13, -23, -33), result);
+    }
+
+    @Test
+    public void getForwardWithNull() {
+        try {
+            new Matrix().getForward(null);
+            fail();
+        } catch (ArgumentNullException e) {
+            // expected.
+        }
+    }
+
+    @Test
+    public void setForward() {
+        Matrix matrix = new Matrix();
+        Matrix expected = new Matrix(0, 0, -13, 0,
+                                     0, 0, -23, 0,
+                                     0, 0, -33, 0,
+                                     0, 0, 0, 0);
+
+        Matrix result = matrix.setForward(new Vector3(13, 23, 33));
+
+        assertSame(matrix, result);
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void setForwardWithNull() {
+        try {
+            new Matrix().setForward(null);
+            fail();
+        } catch (ArgumentNullException e) {
+            // expected.
+        }
+    }
+
+    @Test
     public void toArrayInRowMajorOrder() {
         float[] expected = {
                 11, 12, 13, 14,
