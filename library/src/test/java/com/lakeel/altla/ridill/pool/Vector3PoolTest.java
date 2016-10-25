@@ -11,6 +11,6 @@ public final class Vector3PoolTest {
     public void getInstance() {
         Vector3Pool pool = Vector3Pool.getInstance();
 
-        Assert.assertEquals(Vector3.class, pool.borrowObject().getClass());
+        Assert.assertEquals(Vector3.class, pool.activate().getClass());
     }
 }

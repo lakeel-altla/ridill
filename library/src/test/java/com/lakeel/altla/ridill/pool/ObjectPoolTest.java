@@ -1,70 +1,139 @@
 package com.lakeel.altla.ridill.pool;
 
+import com.lakeel.altla.ridill.ArgumentNullException;
+
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public final class ObjectPoolTest {
 
     @Test
-    public void scenario() {
+    public void scenarioWithTry() {
         ObjectPool<MockObject> pool = new ObjectPool<>(new MockFactory());
 
-        MockObject object1 = pool.borrowObject();
-        assertFalse(object1.isReleased);
+        try (PooledObject<MockObject> pooledObject1 = pool.activate()) {
+            MockObject object1 = pooledObject1.get();
+            assertTrue(object1.isActive);
+            assertEquals(1, pool.getActiveObjectCount());
+            assertEquals(0, pool.getPassiveObjectCount());
 
-        MockObject object2 = pool.borrowObject();
-        assertFalse(object2.isReleased);
+            try (PooledObject<MockObject> pooledObject2 = pool.activate()) {
+                MockObject object2 = pooledObject2.get();
+                assertTrue(object2.isActive);
+                assertEquals(2, pool.getActiveObjectCount());
+                assertEquals(0, pool.getPassiveObjectCount());
 
-        MockObject object3 = pool.borrowObject();
-        assertFalse(object3.isReleased);
+                try (PooledObject<MockObject> pooledObject3 = pool.activate()) {
+                    MockObject object3 = pooledObject3.get();
+                    assertTrue(object3.isActive);
+                    assertEquals(3, pool.getActiveObjectCount());
+                    assertEquals(0, pool.getPassiveObjectCount());
+                }
 
-        pool.returnObject(object1);
-        assertTrue(object1.isReleased);
-        assertEquals(1, pool.size());
+                assertEquals(2, pool.getActiveObjectCount());
+                assertEquals(1, pool.getPassiveObjectCount());
+            }
 
-        pool.returnObject(object2);
-        assertTrue(object2.isReleased);
-        assertEquals(2, pool.size());
+            assertEquals(1, pool.getActiveObjectCount());
+            assertEquals(2, pool.getPassiveObjectCount());
+        }
 
-        pool.returnObject(object3);
-        assertTrue(object3.isReleased);
-        assertEquals(3, pool.size());
+        assertEquals(0, pool.getActiveObjectCount());
+        assertEquals(3, pool.getPassiveObjectCount());
 
         pool.clear();
-        assertEquals(0, pool.size());
+        assertEquals(0, pool.getActiveObjectCount());
+    }
+
+    @Test
+    public void scenarioWithoutTry() {
+        ObjectPool<MockObject> pool = new ObjectPool<>(new MockFactory());
+
+        PooledObject<MockObject> pooledObject1 = pool.activate();
+        MockObject object1 = pooledObject1.get();
+        assertTrue(object1.isActive);
+        assertEquals(1, pool.getActiveObjectCount());
+        assertEquals(0, pool.getPassiveObjectCount());
+
+        PooledObject<MockObject> pooledObject2 = pool.activate();
+        MockObject object2 = pooledObject2.get();
+        assertTrue(object2.isActive);
+        assertEquals(2, pool.getActiveObjectCount());
+        assertEquals(0, pool.getPassiveObjectCount());
+
+        PooledObject<MockObject> pooledObject3 = pool.activate();
+        MockObject object3 = pooledObject3.get();
+        assertTrue(object3.isActive);
+        assertEquals(3, pool.getActiveObjectCount());
+        assertEquals(0, pool.getPassiveObjectCount());
+
+        pool.passivate(pooledObject3);
+        assertFalse(object3.isActive);
+        assertEquals(2, pool.getActiveObjectCount());
+        assertEquals(1, pool.getPassiveObjectCount());
+
+        pool.passivate(pooledObject2);
+        assertFalse(object2.isActive);
+        assertEquals(1, pool.getActiveObjectCount());
+        assertEquals(2, pool.getPassiveObjectCount());
+
+        pool.passivate(pooledObject1);
+        assertFalse(object1.isActive);
+        assertEquals(0, pool.getActiveObjectCount());
+        assertEquals(3, pool.getPassiveObjectCount());
+
+        pool.clear();
+        assertEquals(0, pool.getPassiveObjectCount());
+    }
+
+    @Test
+    public void returnObjectWithNull() {
+        try {
+            new ObjectPool<>(new MockFactory()).passivate(null);
+            fail();
+        } catch (ArgumentNullException e) {
+            // expected.
+        }
+    }
+
+    @Test
+    public void returnObjectWithAlreadyReturnedObject() {
+        ObjectPool<MockObject> pool = new ObjectPool<>(new MockFactory());
+        PooledObject<MockObject> holder = pool.activate();
+        pool.passivate(holder);
+
+        try {
+            pool.passivate(holder);
+            fail();
+        } catch (IllegalArgumentException e) {
+            // expected.
+        }
     }
 
     public final class MockFactory implements ObjectPool.Factory<MockObject> {
 
-        private int counter;
-
         @Override
         public MockObject create() {
-            return new MockObject(counter++);
+            return new MockObject();
         }
 
         @Override
         public void activate(MockObject object) {
-            object.isReleased = false;
+            object.isActive = true;
         }
 
         @Override
         public void passivate(MockObject object) {
-            object.isReleased = true;
+            object.isActive = false;
         }
     }
 
     private final class MockObject {
 
-        private final int number;
-
-        private boolean isReleased;
-
-        MockObject(int number) {
-            this.number = number;
-        }
+        private boolean isActive;
     }
 }

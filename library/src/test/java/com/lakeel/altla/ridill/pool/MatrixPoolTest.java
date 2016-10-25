@@ -12,6 +12,6 @@ public final class MatrixPoolTest {
     public void getInstance() {
         MatrixPool pool = MatrixPool.getInstance();
 
-        assertEquals(Matrix.class, pool.borrowObject().getClass());
+        assertEquals(Matrix.class, pool.activate().getClass());
     }
 }

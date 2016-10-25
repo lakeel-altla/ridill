@@ -1,6 +1,7 @@
 package com.lakeel.altla.ridill;
 
 import com.lakeel.altla.ridill.pool.MatrixPool;
+import com.lakeel.altla.ridill.pool.PooledObject;
 import com.lakeel.altla.ridill.pool.Vector3Pool;
 
 import java.util.Objects;
@@ -371,40 +372,42 @@ public class Matrix {
         if (result == null) throw new ArgumentNullException("result");
 
         Vector3Pool pool = Vector3Pool.getInstance();
-        Vector3 xaxis = pool.borrowObject();
-        Vector3 yaxis = pool.borrowObject();
-        Vector3 zaxis = pool.borrowObject();
 
-        Vector3.subtract(position, target, zaxis);
-        zaxis.normalize();
+        try (PooledObject<Vector3> pooledXaxis = pool.activate();
+             PooledObject<Vector3> pooledYaxis = pool.activate();
+             PooledObject<Vector3> pooledZaxis = pool.activate()) {
 
-        Vector3.cross(up, zaxis, xaxis);
-        xaxis.normalize();
+            Vector3 xaxis = pooledXaxis.get();
+            Vector3 yaxis = pooledYaxis.get();
+            Vector3 zaxis = pooledZaxis.get();
 
-        Vector3.cross(zaxis, xaxis, yaxis);
-        yaxis.normalize();
+            Vector3.subtract(position, target, zaxis);
+            zaxis.normalize();
 
-        result.asIdentity();
+            Vector3.cross(up, zaxis, xaxis);
+            xaxis.normalize();
 
-        result.m11 = xaxis.x;
-        result.m21 = xaxis.y;
-        result.m31 = xaxis.z;
+            Vector3.cross(zaxis, xaxis, yaxis);
+            yaxis.normalize();
 
-        result.m12 = yaxis.x;
-        result.m22 = yaxis.y;
-        result.m32 = yaxis.z;
+            result.asIdentity();
 
-        result.m13 = zaxis.x;
-        result.m23 = zaxis.y;
-        result.m33 = zaxis.z;
+            result.m11 = xaxis.x;
+            result.m21 = xaxis.y;
+            result.m31 = xaxis.z;
 
-        result.m14 = -Vector3.dot(xaxis, position);
-        result.m24 = -Vector3.dot(yaxis, position);
-        result.m34 = -Vector3.dot(zaxis, position);
+            result.m12 = yaxis.x;
+            result.m22 = yaxis.y;
+            result.m32 = yaxis.z;
 
-        pool.returnObject(xaxis);
-        pool.returnObject(yaxis);
-        pool.returnObject(zaxis);
+            result.m13 = zaxis.x;
+            result.m23 = zaxis.y;
+            result.m33 = zaxis.z;
+
+            result.m14 = -Vector3.dot(xaxis, position);
+            result.m24 = -Vector3.dot(yaxis, position);
+            result.m34 = -Vector3.dot(zaxis, position);
+        }
     }
 
     /**
@@ -605,25 +608,26 @@ public class Matrix {
         }
 
         //The rotation is the left over Matrix after dividing out the scaling.
-        Matrix rotationMatrix = MatrixPool.getInstance().borrowObject();
+        try (PooledObject<Matrix> pooledMatrix = MatrixPool.getInstance().activate()) {
 
-        rotationMatrix.m11 = m11 / scale.x;
-        rotationMatrix.m21 = m21 / scale.x;
-        rotationMatrix.m31 = m31 / scale.x;
+            Matrix rotationMatrix = pooledMatrix.get();
 
-        rotationMatrix.m12 = m12 / scale.y;
-        rotationMatrix.m22 = m22 / scale.y;
-        rotationMatrix.m32 = m32 / scale.y;
+            rotationMatrix.m11 = m11 / scale.x;
+            rotationMatrix.m21 = m21 / scale.x;
+            rotationMatrix.m31 = m31 / scale.x;
 
-        rotationMatrix.m13 = m13 / scale.z;
-        rotationMatrix.m23 = m23 / scale.z;
-        rotationMatrix.m33 = m33 / scale.z;
+            rotationMatrix.m12 = m12 / scale.y;
+            rotationMatrix.m22 = m22 / scale.y;
+            rotationMatrix.m32 = m32 / scale.y;
 
-        rotationMatrix.m44 = 1f;
+            rotationMatrix.m13 = m13 / scale.z;
+            rotationMatrix.m23 = m23 / scale.z;
+            rotationMatrix.m33 = m33 / scale.z;
 
-        Quaternion.createFromRotationMatrix(rotationMatrix, rotation);
+            rotationMatrix.m44 = 1f;
 
-        MatrixPool.getInstance().returnObject(rotationMatrix);
+            Quaternion.createFromRotationMatrix(rotationMatrix, rotation);
+        }
 
         return true;
     }
