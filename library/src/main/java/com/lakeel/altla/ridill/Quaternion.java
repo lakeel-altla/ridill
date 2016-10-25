@@ -7,7 +7,10 @@ import java.util.Objects;
  */
 public class Quaternion {
 
-    public static final int ELEMENT_COUNT = 4;
+    /**
+     * The number of components.
+     */
+    private static final int COMPONENTS_COUNT = 4;
 
     /**
      * The x-component.
@@ -189,7 +192,7 @@ public class Quaternion {
      */
     public Quaternion set(float[] values) {
         if (values == null) throw new ArgumentNullException("values");
-        if (values.length != ELEMENT_COUNT) throw new IllegalArgumentException("The length of 'values' must be 4.");
+        if (values.length != COMPONENTS_COUNT) throw new IllegalArgumentException("The length of 'values' must be 4.");
 
         return set(values[0], values[1], values[2], values[3]);
     }
