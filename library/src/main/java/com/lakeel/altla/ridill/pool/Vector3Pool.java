@@ -2,6 +2,9 @@ package com.lakeel.altla.ridill.pool;
 
 import com.lakeel.altla.ridill.Vector3;
 
+/**
+ * Defines the pool that manages Vector3 instances per thread.
+ */
 public final class Vector3Pool extends ObjectPool<Vector3> {
 
     private static final ThreadLocal<Vector3Pool> THREAD_LOCAL = new ThreadLocal<Vector3Pool>() {

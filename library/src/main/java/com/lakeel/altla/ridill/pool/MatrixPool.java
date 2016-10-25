@@ -2,6 +2,9 @@ package com.lakeel.altla.ridill.pool;
 
 import com.lakeel.altla.ridill.Matrix;
 
+/**
+ * Defines the pool that manages Matrix instances per thread.
+ */
 public final class MatrixPool extends ObjectPool<Matrix> {
 
     private static final ThreadLocal<MatrixPool> THREAD_LOCAL = new ThreadLocal<MatrixPool>() {
@@ -29,6 +32,11 @@ public final class MatrixPool extends ObjectPool<Matrix> {
         });
     }
 
+    /**
+     * Returns the singleton.
+     *
+     * @return The singleton.
+     */
     public static MatrixPool getInstance() {
         return THREAD_LOCAL.get();
     }
