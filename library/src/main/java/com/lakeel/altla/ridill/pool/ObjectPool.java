@@ -2,17 +2,18 @@ package com.lakeel.altla.ridill.pool;
 
 import com.lakeel.altla.ridill.ArgumentNullException;
 
+import java.io.Closeable;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
 /**
  * Defines the object pool.
  *
- * @param <T> The type of the pooled object.
+ * @param <T> The type of the poolable object.
  */
-public class ObjectPool<T> {
+public class ObjectPool<T extends ObjectPool.Poolable> {
 
-    private final Deque<PooledObject<T>> deque = new ArrayDeque<>();
+    private final Deque<T> deque = new ArrayDeque<>();
 
     private final Factory<T> factory;
 
@@ -21,7 +22,7 @@ public class ObjectPool<T> {
     /**
      * Creates this instance.
      *
-     * @param factory The factory that creates pooled objects.
+     * @param factory The factory that creates poolable objects.
      */
     public ObjectPool(Factory<T> factory) {
         this.factory = factory;
@@ -32,33 +33,31 @@ public class ObjectPool<T> {
      *
      * @return An object from this pool.
      */
-    public PooledObject<T> activate() {
-        PooledObject<T> pooledObject = deque.poll();
-        if (pooledObject == null) {
-            pooledObject = new PooledObject<>(this, factory.create());
+    public T activate() {
+        T poolable = deque.poll();
+        if (poolable == null) {
+            poolable = factory.create(this);
         }
 
-        factory.activate(pooledObject.get());
-        pooledObject.onActivate();
+        poolable.onActivate();
         activeObjectCount++;
 
-        return pooledObject;
+        return poolable;
     }
 
     /**
      * Passivates an object into this pool.
      *
-     * @param pooledObject An object to be returned.
+     * @param poolable An object to be returned.
      */
-    public void passivate(PooledObject<T> pooledObject) {
-        if (pooledObject == null) throw new ArgumentNullException("pooledObject");
-        if (!pooledObject.isActive()) throw new IllegalArgumentException("PooledObject is already passive.");
+    public void passivate(T poolable) {
+        if (poolable == null) throw new ArgumentNullException("poolable");
+        if (!poolable.isActive()) throw new IllegalArgumentException("'poolable' is already passive.");
 
-        factory.passivate(pooledObject.get());
-        pooledObject.onPassivate();
+        poolable.onPassivate();
         activeObjectCount--;
 
-        deque.push(pooledObject);
+        deque.push(poolable);
     }
 
     /**
@@ -87,31 +86,41 @@ public class ObjectPool<T> {
     }
 
     /**
-     * Defines the factory class that creates the pooled object.
-     *
-     * @param <T> The type of the pooled object.
+     * Defines the poolable object.
      */
-    public interface Factory<T> {
+    public interface Poolable extends Closeable {
 
         /**
-         * Creates a new pooled object.
+         * Returns true if this instance is active; otherwise false.
          *
-         * @return A new pooled object.
+         * @return true if this instance is active; otherwise false.
          */
-        T create();
+        boolean isActive();
 
         /**
-         * Activates the passive object.
-         *
-         * @param object The object to be active.
+         * The callback method invoked when this instance become active.
          */
-        void activate(T object);
+        void onActivate();
 
         /**
-         * Passivates the active object.
-         *
-         * @param object The object to be passive.
+         * The callback method invoked when this instance become passive.
          */
-        void passivate(T object);
+        void onPassivate();
+    }
+
+    /**
+     * Defines the factory class that creates the poolable object.
+     *
+     * @param <T> The type of the poolable object.
+     */
+    public interface Factory<T extends ObjectPool.Poolable> {
+
+        /**
+         * Creates a new poolable object.
+         *
+         * @param pool The pool that manages the new poolable object.
+         * @return A new poolable object.
+         */
+        T create(ObjectPool<T> pool);
     }
 }

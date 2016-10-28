@@ -15,21 +15,18 @@ public final class ObjectPoolTest {
     public void scenarioWithTry() {
         ObjectPool<MockObject> pool = new ObjectPool<>(new MockFactory());
 
-        try (PooledObject<MockObject> pooledObject1 = pool.activate()) {
-            MockObject object1 = pooledObject1.get();
-            assertTrue(object1.isActive);
+        try (MockObject object1 = pool.activate()) {
+            assertTrue(object1.active);
             assertEquals(1, pool.getActiveObjectCount());
             assertEquals(0, pool.getPassiveObjectCount());
 
-            try (PooledObject<MockObject> pooledObject2 = pool.activate()) {
-                MockObject object2 = pooledObject2.get();
-                assertTrue(object2.isActive);
+            try (MockObject object2 = pool.activate()) {
+                assertTrue(object2.active);
                 assertEquals(2, pool.getActiveObjectCount());
                 assertEquals(0, pool.getPassiveObjectCount());
 
-                try (PooledObject<MockObject> pooledObject3 = pool.activate()) {
-                    MockObject object3 = pooledObject3.get();
-                    assertTrue(object3.isActive);
+                try (MockObject object3 = pool.activate()) {
+                    assertTrue(object3.active);
                     assertEquals(3, pool.getActiveObjectCount());
                     assertEquals(0, pool.getPassiveObjectCount());
                 }
@@ -53,36 +50,33 @@ public final class ObjectPoolTest {
     public void scenarioWithoutTry() {
         ObjectPool<MockObject> pool = new ObjectPool<>(new MockFactory());
 
-        PooledObject<MockObject> pooledObject1 = pool.activate();
-        MockObject object1 = pooledObject1.get();
-        assertTrue(object1.isActive);
+        MockObject object1 = pool.activate();
+        assertTrue(object1.active);
         assertEquals(1, pool.getActiveObjectCount());
         assertEquals(0, pool.getPassiveObjectCount());
 
-        PooledObject<MockObject> pooledObject2 = pool.activate();
-        MockObject object2 = pooledObject2.get();
-        assertTrue(object2.isActive);
+        MockObject object2 = pool.activate();
+        assertTrue(object2.active);
         assertEquals(2, pool.getActiveObjectCount());
         assertEquals(0, pool.getPassiveObjectCount());
 
-        PooledObject<MockObject> pooledObject3 = pool.activate();
-        MockObject object3 = pooledObject3.get();
-        assertTrue(object3.isActive);
+        MockObject object3 = pool.activate();
+        assertTrue(object3.active);
         assertEquals(3, pool.getActiveObjectCount());
         assertEquals(0, pool.getPassiveObjectCount());
 
-        pool.passivate(pooledObject3);
-        assertFalse(object3.isActive);
+        pool.passivate(object3);
+        assertFalse(object3.active);
         assertEquals(2, pool.getActiveObjectCount());
         assertEquals(1, pool.getPassiveObjectCount());
 
-        pool.passivate(pooledObject2);
-        assertFalse(object2.isActive);
+        pool.passivate(object2);
+        assertFalse(object2.active);
         assertEquals(1, pool.getActiveObjectCount());
         assertEquals(2, pool.getPassiveObjectCount());
 
-        pool.passivate(pooledObject1);
-        assertFalse(object1.isActive);
+        pool.passivate(object1);
+        assertFalse(object1.active);
         assertEquals(0, pool.getActiveObjectCount());
         assertEquals(3, pool.getPassiveObjectCount());
 
@@ -103,37 +97,53 @@ public final class ObjectPoolTest {
     @Test
     public void returnObjectWithAlreadyReturnedObject() {
         ObjectPool<MockObject> pool = new ObjectPool<>(new MockFactory());
-        PooledObject<MockObject> holder = pool.activate();
-        pool.passivate(holder);
+        MockObject object = pool.activate();
+        pool.passivate(object);
 
         try {
-            pool.passivate(holder);
+            pool.passivate(object);
             fail();
         } catch (IllegalArgumentException e) {
             // expected.
         }
     }
 
-    public final class MockFactory implements ObjectPool.Factory<MockObject> {
+    private final class MockObject implements ObjectPool.Poolable {
 
-        @Override
-        public MockObject create() {
-            return new MockObject();
+        private final ObjectPool<MockObject> pool;
+
+        private boolean active;
+
+        public MockObject(ObjectPool<MockObject> pool) {
+            this.pool = pool;
         }
 
         @Override
-        public void activate(MockObject object) {
-            object.isActive = true;
+        public boolean isActive() {
+            return active;
         }
 
         @Override
-        public void passivate(MockObject object) {
-            object.isActive = false;
+        public void onActivate() {
+            active = true;
+        }
+
+        @Override
+        public void onPassivate() {
+            active = false;
+        }
+
+        @Override
+        public void close() {
+            pool.passivate(this);
         }
     }
 
-    private final class MockObject {
+    public final class MockFactory implements ObjectPool.Factory<MockObject> {
 
-        private boolean isActive;
+        @Override
+        public MockObject create(ObjectPool<MockObject> pool) {
+            return new MockObject(pool);
+        }
     }
 }
