@@ -7,10 +7,7 @@ import java.util.Objects;
  */
 public class Vector4 {
 
-    /**
-     * The number of components.
-     */
-    private static final int COMPONENTS_COUNT = 4;
+    public static final int ELEMENT_COUNT = 4;
 
     /**
      * The x-component.
@@ -364,7 +361,7 @@ public class Vector4 {
      */
     public Vector4 set(float[] values) {
         if (values == null) throw new ArgumentNullException("values");
-        if (values.length != COMPONENTS_COUNT) throw new IllegalArgumentException("The length of 'values' must be 4.");
+        if (values.length != ELEMENT_COUNT) throw new IllegalArgumentException("The length of 'values' must be 4.");
 
         return set(values[0], values[1], values[2], values[3]);
     }
@@ -443,7 +440,7 @@ public class Vector4 {
      */
     public void toArray(float[] result) {
         if (result == null) throw new ArgumentNullException("result");
-        if (result.length != COMPONENTS_COUNT) throw new IllegalArgumentException("The length of 'result' must be 4.");
+        if (result.length != ELEMENT_COUNT) throw new IllegalArgumentException("The length of 'result' must be 4.");
 
         result[0] = x;
         result[1] = y;

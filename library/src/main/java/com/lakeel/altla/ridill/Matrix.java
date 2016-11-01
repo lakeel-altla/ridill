@@ -12,20 +12,7 @@ import java.util.Objects;
  */
 public class Matrix {
 
-    /**
-     * The total number of components.
-     */
-    private static final int COMPONENTS_COUNT = 16;
-
-    /**
-     * The number of rows.
-     */
-    private static final int ROW_COUNT = 4;
-
-    /**
-     * The number of columns.
-     */
-    private static final int COLUMN_COUNT = 4;
+    public static final int ELEMENT_COUNT = 16;
 
     /**
      * The value at row 1 column 1 of the matrix.
@@ -933,7 +920,7 @@ public class Matrix {
      */
     public Matrix setInRowMajorOrder(float[] values) {
         if (values == null) throw new ArgumentNullException("values");
-        if (values.length != COMPONENTS_COUNT) {
+        if (values.length != ELEMENT_COUNT) {
             throw new IllegalArgumentException("'values' must be an array of length 16.");
         }
 
@@ -968,7 +955,7 @@ public class Matrix {
      */
     public Matrix setInColumnMajorOrder(float[] values) {
         if (values == null) throw new ArgumentNullException("values");
-        if (values.length != COMPONENTS_COUNT) {
+        if (values.length != ELEMENT_COUNT) {
             throw new IllegalArgumentException("'values' must be an array of length 16.");
         }
 
@@ -993,111 +980,6 @@ public class Matrix {
         m44 = values[15];
 
         return this;
-    }
-
-    /**
-     * Gets the component of the specified index.
-     *
-     * @param row    The row index.
-     * @param column The column index.
-     * @return The component of the specified index.
-     */
-    public float get(int row, int column) {
-        if (row < 0 || ROW_COUNT <= row) throw new IndexOutOfBoundsException("'row' must be from 0 to 3.");
-        if (column < 0 || COLUMN_COUNT <= column) throw new IndexOutOfBoundsException("'column' must be from 0 to 3.");
-
-        if (row == 0 && column == 0) return m11;
-        if (row == 0 && column == 1) return m12;
-        if (row == 0 && column == 2) return m13;
-        if (row == 0 && column == 3) return m14;
-
-        if (row == 1 && column == 0) return m21;
-        if (row == 1 && column == 1) return m22;
-        if (row == 1 && column == 2) return m23;
-        if (row == 1 && column == 3) return m24;
-
-        if (row == 2 && column == 0) return m31;
-        if (row == 2 && column == 1) return m32;
-        if (row == 2 && column == 2) return m33;
-        if (row == 2 && column == 3) return m34;
-
-        if (row == 3 && column == 0) return m41;
-        if (row == 3 && column == 1) return m42;
-        if (row == 3 && column == 2) return m43;
-        if (row == 3 && column == 3) return m44;
-
-        // never.
-        throw new RuntimeException();
-    }
-
-    /**
-     * Gets the component of the specified index in row-major order.
-     *
-     * @param index The index in row-major order.
-     * @return The component of the specified index.
-     */
-    public float getInRowMajorOrder(int index) {
-        if (index < 0 || COMPONENTS_COUNT <= index) {
-            throw new IndexOutOfBoundsException("'index' must be from 0 to 15.");
-        }
-
-        if (index == 0) return m11;
-        if (index == 1) return m12;
-        if (index == 2) return m13;
-        if (index == 3) return m14;
-
-        if (index == 4) return m21;
-        if (index == 5) return m22;
-        if (index == 6) return m23;
-        if (index == 7) return m24;
-
-        if (index == 8) return m31;
-        if (index == 9) return m32;
-        if (index == 10) return m33;
-        if (index == 11) return m34;
-
-        if (index == 12) return m41;
-        if (index == 13) return m42;
-        if (index == 14) return m43;
-        if (index == 15) return m44;
-
-        // never.
-        throw new RuntimeException();
-    }
-
-    /**
-     * Gets the component of the specified index in column-major order.
-     *
-     * @param index The index in column-major order.
-     * @return The component of the specified index.
-     */
-    public float getInColumnMajorOrder(int index) {
-        if (index < 0 || COMPONENTS_COUNT <= index) {
-            throw new IndexOutOfBoundsException("'index' must be from 0 to 15.");
-        }
-
-        if (index == 0) return m11;
-        if (index == 1) return m21;
-        if (index == 2) return m31;
-        if (index == 3) return m41;
-
-        if (index == 4) return m12;
-        if (index == 5) return m22;
-        if (index == 6) return m32;
-        if (index == 7) return m42;
-
-        if (index == 8) return m13;
-        if (index == 9) return m23;
-        if (index == 10) return m33;
-        if (index == 11) return m43;
-
-        if (index == 12) return m14;
-        if (index == 13) return m24;
-        if (index == 14) return m34;
-        if (index == 15) return m44;
-
-        // never.
-        throw new RuntimeException();
     }
 
     /**
@@ -1320,7 +1202,7 @@ public class Matrix {
      */
     public void toArrayInRowMajorOrder(float[] result) {
         if (result == null) throw new ArgumentNullException("result");
-        if (result.length != COMPONENTS_COUNT) throw new IllegalArgumentException("The length of 'result' must be 16.");
+        if (result.length != ELEMENT_COUNT) throw new IllegalArgumentException("The length of 'result' must be 16.");
 
         result[0] = m11;
         result[1] = m12;
@@ -1350,7 +1232,7 @@ public class Matrix {
      */
     public void toArrayInColumnMajorOrder(float[] result) {
         if (result == null) throw new ArgumentNullException("result");
-        if (result.length != COMPONENTS_COUNT) throw new IllegalArgumentException("The length of 'result' must be 16.");
+        if (result.length != ELEMENT_COUNT) throw new IllegalArgumentException("The length of 'result' must be 16.");
 
         result[0] = m11;
         result[1] = m21;

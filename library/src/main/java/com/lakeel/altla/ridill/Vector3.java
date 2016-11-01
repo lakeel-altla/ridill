@@ -7,10 +7,7 @@ import java.util.Objects;
  */
 public class Vector3 {
 
-    /**
-     * The number of components.
-     */
-    private static final int COMPONENTS_COUNT = 3;
+    public static final int ELEMENT_COUNT = 3;
 
     /**
      * The x-component.
@@ -367,7 +364,7 @@ public class Vector3 {
      */
     public Vector3 set(float[] values) {
         if (values == null) throw new ArgumentNullException("values");
-        if (values.length != COMPONENTS_COUNT) throw new IllegalArgumentException("The length of 'values' must be 3.");
+        if (values.length != ELEMENT_COUNT) throw new IllegalArgumentException("The length of 'values' must be 3.");
 
         x = values[0];
         y = values[1];
@@ -482,7 +479,7 @@ public class Vector3 {
      */
     public void toArray(float[] result) {
         if (result == null) throw new ArgumentNullException("result");
-        if (result.length != COMPONENTS_COUNT) throw new IllegalArgumentException("The length of 'result' must be 3.");
+        if (result.length != ELEMENT_COUNT) throw new IllegalArgumentException("The length of 'result' must be 3.");
 
         result[0] = x;
         result[1] = y;
