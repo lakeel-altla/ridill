@@ -1,6 +1,5 @@
 package com.lakeel.altla.ridill.pool;
 
-import com.lakeel.altla.pool.ObjectPool;
 import com.lakeel.altla.ridill.Matrix;
 
 /**
@@ -8,18 +7,17 @@ import com.lakeel.altla.ridill.Matrix;
  */
 public class PoolableMatrix extends Matrix implements ObjectPool.Poolable {
 
-    private static final ThreadLocal<ObjectPool<PoolableMatrix>> THREAD_LOCAL =
-            new ThreadLocal<ObjectPool<PoolableMatrix>>() {
+    private static final ThreadLocal<ObjectPool<PoolableMatrix>> THREAD_LOCAL = new ThreadLocal<ObjectPool<PoolableMatrix>>() {
+        @Override
+        protected ObjectPool<PoolableMatrix> initialValue() {
+            return new ObjectPool<>(new ObjectPool.Factory<PoolableMatrix>() {
                 @Override
-                protected ObjectPool<PoolableMatrix> initialValue() {
-                    return new ObjectPool<>(new ObjectPool.Factory<PoolableMatrix>() {
-                        @Override
-                        public PoolableMatrix create(ObjectPool<PoolableMatrix> pool) {
-                            return new PoolableMatrix(pool);
-                        }
-                    });
+                public PoolableMatrix create(ObjectPool<PoolableMatrix> pool) {
+                    return new PoolableMatrix(pool);
                 }
-            };
+            });
+        }
+    };
 
     private final ObjectPool<PoolableMatrix> pool;
 
