@@ -1,6 +1,5 @@
 package com.lakeel.altla.ridill.pool;
 
-import com.lakeel.altla.pool.ObjectPool;
 import com.lakeel.altla.ridill.Vector3;
 
 /**
@@ -8,18 +7,17 @@ import com.lakeel.altla.ridill.Vector3;
  */
 public class PoolableVector3 extends Vector3 implements ObjectPool.Poolable {
 
-    private static final ThreadLocal<ObjectPool<PoolableVector3>> THREAD_LOCAL =
-            new ThreadLocal<ObjectPool<PoolableVector3>>() {
+    private static final ThreadLocal<ObjectPool<PoolableVector3>> THREAD_LOCAL = new ThreadLocal<ObjectPool<PoolableVector3>>() {
+        @Override
+        protected ObjectPool<PoolableVector3> initialValue() {
+            return new ObjectPool<>(new ObjectPool.Factory<PoolableVector3>() {
                 @Override
-                protected ObjectPool<PoolableVector3> initialValue() {
-                    return new ObjectPool<>(new ObjectPool.Factory<PoolableVector3>() {
-                        @Override
-                        public PoolableVector3 create(ObjectPool<PoolableVector3> pool) {
-                            return new PoolableVector3(pool);
-                        }
-                    });
+                public PoolableVector3 create(ObjectPool<PoolableVector3> pool) {
+                    return new PoolableVector3(pool);
                 }
-            };
+            });
+        }
+    };
 
     private final ObjectPool<PoolableVector3> pool;
 
