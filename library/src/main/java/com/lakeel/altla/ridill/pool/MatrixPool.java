@@ -5,39 +5,33 @@ import com.lakeel.altla.ridill.Matrix;
 /**
  * Defines the pool that manages Matrix instances per thread.
  */
-public final class MatrixPool extends ObjectPool<Matrix> {
+public final class MatrixPool {
 
-    private static final ThreadLocal<MatrixPool> THREAD_LOCAL = new ThreadLocal<MatrixPool>() {
+    private static final ThreadLocal<Pool<Matrix>> THREAD_LOCAL = new ThreadLocal<Pool<Matrix>>() {
         @Override
-        protected MatrixPool initialValue() {
-            return new MatrixPool();
+        protected Pool<Matrix> initialValue() {
+            return new Pool<>(new Pool.Factory<Matrix>() {
+                @Override
+                public Matrix create() {
+                    return new Matrix();
+                }
+            }, new Pool.Recycler<Matrix>() {
+                @Override
+                public void recycle(Matrix object) {
+                    object.asZero();
+                }
+            });
         }
     };
 
     private MatrixPool() {
-        super(new Factory<Matrix>() {
-            @Override
-            public Matrix create() {
-                return new Matrix();
-            }
-
-            @Override
-            public void activate(Matrix object) {
-                object.asZero();
-            }
-
-            @Override
-            public void passivate(Matrix object) {
-            }
-        });
     }
 
-    /**
-     * Returns the singleton.
-     *
-     * @return The singleton.
-     */
-    public static MatrixPool getInstance() {
+    public static Pool<Matrix> getPool() {
         return THREAD_LOCAL.get();
+    }
+
+    public static Pool.Holder<Matrix> get() {
+        return getPool().get();
     }
 }

@@ -1,7 +1,7 @@
 package com.lakeel.altla.ridill;
 
 import com.lakeel.altla.ridill.pool.MatrixPool;
-import com.lakeel.altla.ridill.pool.PooledObject;
+import com.lakeel.altla.ridill.pool.Pool.Holder;
 import com.lakeel.altla.ridill.pool.Vector3Pool;
 
 import java.util.Objects;
@@ -384,15 +384,13 @@ public class Matrix {
         if (up == null) throw new ArgumentNullException("up");
         if (result == null) throw new ArgumentNullException("result");
 
-        Vector3Pool pool = Vector3Pool.getInstance();
+        try (Holder<Vector3> xaxisHolder = Vector3Pool.get();
+             Holder<Vector3> yaxisHolder = Vector3Pool.get();
+             Holder<Vector3> zaxisHolder = Vector3Pool.get()) {
 
-        try (PooledObject<Vector3> pooledXaxis = pool.activate();
-             PooledObject<Vector3> pooledYaxis = pool.activate();
-             PooledObject<Vector3> pooledZaxis = pool.activate()) {
-
-            Vector3 xaxis = pooledXaxis.get();
-            Vector3 yaxis = pooledYaxis.get();
-            Vector3 zaxis = pooledZaxis.get();
+            Vector3 xaxis = xaxisHolder.get();
+            Vector3 yaxis = yaxisHolder.get();
+            Vector3 zaxis = zaxisHolder.get();
 
             Vector3.subtract(position, target, zaxis);
             zaxis.normalize();
@@ -621,9 +619,9 @@ public class Matrix {
         }
 
         //The rotation is the left over Matrix after dividing out the scaling.
-        try (PooledObject<Matrix> pooledMatrix = MatrixPool.getInstance().activate()) {
+        try (Holder<Matrix> matrixHolder = MatrixPool.get()) {
 
-            Matrix rotationMatrix = pooledMatrix.get();
+            Matrix rotationMatrix = matrixHolder.get();
 
             rotationMatrix.m11 = m11 / scale.x;
             rotationMatrix.m21 = m21 / scale.x;

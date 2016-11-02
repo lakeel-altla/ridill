@@ -1,16 +1,18 @@
 package com.lakeel.altla.ridill.pool;
 
-import com.lakeel.altla.ridill.Vector3;
-
-import org.junit.Assert;
 import org.junit.Test;
+
+import static org.junit.Assert.assertNotNull;
 
 public final class Vector3PoolTest {
 
     @Test
-    public void getInstance() {
-        Vector3Pool pool = Vector3Pool.getInstance();
+    public void getPool() {
+        assertNotNull(Vector3Pool.getPool());
+    }
 
-        Assert.assertEquals(Vector3.class, pool.activate().getClass());
+    @Test
+    public void get() {
+        assertNotNull(Vector3Pool.get());
     }
 }

@@ -1,17 +1,18 @@
 package com.lakeel.altla.ridill.pool;
 
-import com.lakeel.altla.ridill.Matrix;
-
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public final class MatrixPoolTest {
 
     @Test
-    public void getInstance() {
-        MatrixPool pool = MatrixPool.getInstance();
+    public void getPool() {
+        assertNotNull(MatrixPool.getPool());
+    }
 
-        assertEquals(Matrix.class, pool.activate().getClass());
+    @Test
+    public void get() {
+        assertNotNull(MatrixPool.get());
     }
 }
