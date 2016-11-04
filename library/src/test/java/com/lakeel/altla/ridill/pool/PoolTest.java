@@ -74,6 +74,28 @@ public final class PoolTest {
     }
 
     @Test
+    public void getWithFactoryReturnsNull() {
+        Pool<Mock> pool = new Pool<>(new Factory<Mock>() {
+            @Override
+            public Mock create() {
+                return null;
+            }
+        }, new Recycler<Mock>() {
+            @Override
+            public void recycle(Mock object) {
+
+            }
+        });
+
+        try {
+            pool.get();
+            fail();
+        } catch (IllegalStateException e) {
+            // expected.
+        }
+    }
+
+    @Test
     public void recycle() {
         final Mock mock = new Mock();
 
@@ -114,28 +136,6 @@ public final class PoolTest {
         } catch (ArgumentNullException e) {
             // expected.
         }
-    }
-
-    @Test
-    public void tryWithHolder() {
-        final Mock mock = new Mock();
-
-        Pool<Mock> pool = new Pool<>(new Factory<Mock>() {
-            @Override
-            public Mock create() {
-                return mock;
-            }
-        }, new Recycler<Mock>() {
-            @Override
-            public void recycle(Mock object) {
-                object.recycled = true;
-            }
-        });
-
-        try (Holder<Mock> holder = pool.get()) {
-        }
-
-        assertTrue(mock.recycled);
     }
 
     @Test
@@ -201,6 +201,71 @@ public final class PoolTest {
         }
 
         assertEquals(3, pool.getPassiveObjectCount());
+    }
+
+    @Test
+    public void tryWithHolder() {
+        final Mock mock = new Mock();
+
+        Pool<Mock> pool = new Pool<>(new Factory<Mock>() {
+            @Override
+            public Mock create() {
+                return mock;
+            }
+        }, new Recycler<Mock>() {
+            @Override
+            public void recycle(Mock object) {
+                object.recycled = true;
+            }
+        });
+
+        try (Holder<Mock> holder = pool.get()) {
+        }
+
+        assertTrue(mock.recycled);
+    }
+
+    @Test
+    public void close() {
+        Pool<Mock> pool = new Pool<>(new Factory<Mock>() {
+            @Override
+            public Mock create() {
+                return new Mock();
+            }
+        }, new Recycler<Mock>() {
+            @Override
+            public void recycle(Mock object) {
+            }
+        });
+
+        Holder<Mock> holder = pool.get();
+        holder.close();
+
+        assertEquals(1, pool.getPassiveObjectCount());
+    }
+
+    @Test
+    public void closeTwice() {
+        Pool<Mock> pool = new Pool<>(new Factory<Mock>() {
+            @Override
+            public Mock create() {
+                return new Mock();
+            }
+        }, new Recycler<Mock>() {
+            @Override
+            public void recycle(Mock object) {
+            }
+        });
+
+        Holder<Mock> holder = pool.get();
+        holder.close();
+
+        try {
+            holder.close();
+            fail();
+        } catch (IllegalStateException e) {
+            // expected.
+        }
     }
 
     private class Mock {
