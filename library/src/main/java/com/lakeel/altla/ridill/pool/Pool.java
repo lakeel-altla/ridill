@@ -5,6 +5,11 @@ import com.lakeel.altla.ridill.ArgumentNullException;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
+/**
+ * Defines the object pool.
+ *
+ * @param <T> The type of objects pooled.
+ */
 public final class Pool<T> {
 
     private final Factory<T> factory;
@@ -15,6 +20,12 @@ public final class Pool<T> {
 
     private int activeObjectCount;
 
+    /**
+     * Initializes this instance.
+     *
+     * @param factory  The factory that creates objects pooled by this instance.
+     * @param recycler The recycler that recycles objects pooled by this instance.
+     */
     public Pool(Factory<T> factory, Recycler<T> recycler) {
         if (factory == null) throw new ArgumentNullException("factory");
         if (recycler == null) throw new ArgumentNullException("recycler");
@@ -23,6 +34,11 @@ public final class Pool<T> {
         this.recycler = recycler;
     }
 
+    /**
+     * Gets the holder that contains an object pooled.
+     *
+     * @return The holder that contains an object pooled.
+     */
     public Holder<T> get() {
         Holder<T> holder = deque.poll();
         if (holder == null) {
@@ -38,6 +54,11 @@ public final class Pool<T> {
         return holder;
     }
 
+    /**
+     * Recycles the holder.
+     *
+     * @param holder The holder that is recycled.
+     */
     public void recycle(Holder<T> holder) {
         if (holder == null) throw new ArgumentNullException("holder");
 
@@ -47,14 +68,29 @@ public final class Pool<T> {
         activeObjectCount--;
     }
 
+    /**
+     * Gets the number of active holders.
+     *
+     * @return The number of active holders.
+     */
     public int getActiveObjectCount() {
         return activeObjectCount;
     }
 
+    /**
+     * Gets the number of passive holders.
+     *
+     * @return The number of passive holders.
+     */
     public int getPassiveObjectCount() {
         return deque.size();
     }
 
+    /**
+     * Defines the holder that contains objects pooled by this instance.
+     *
+     * @param <T> The type of an object that is hold by the holder.
+     */
     public static final class Holder<T> implements AutoCloseable {
 
         private final Pool<T> pool;
@@ -68,6 +104,9 @@ public final class Pool<T> {
             this.object = object;
         }
 
+        /**
+         * Recycles this instance.
+         */
         @Override
         public void close() {
             if (!active) throw new IllegalStateException("This holder is already closed.");
@@ -75,16 +114,31 @@ public final class Pool<T> {
             pool.recycle(this);
         }
 
+        /**
+         * Gets the object as an entity.
+         *
+         * @return The object as an entity.
+         */
         public T get() {
             return object;
         }
     }
 
+    /**
+     * Defines the factory that creates objects managed by {@link Pool}.
+     *
+     * @param <T> The type of an object that is managed by {@link Pool}.
+     */
     public interface Factory<T> {
 
         T create();
     }
 
+    /**
+     * Defines the recycler that recycles objects managed by {@link Pool}.
+     *
+     * @param <T> The type of an object that is managed by {@link Pool}.
+     */
     public interface Recycler<T> {
 
         void recycle(T object);
