@@ -43,7 +43,7 @@ public final class Pool<T> {
         Holder<T> holder = deque.poll();
         if (holder == null) {
             T object = factory.create();
-            if (object == null) throw new RecyclerException("The recycler must not return null.");
+            if (object == null) throw new RecyclerException("The factory must not return null.");
 
             holder = new Holder<>(this, object);
         }
