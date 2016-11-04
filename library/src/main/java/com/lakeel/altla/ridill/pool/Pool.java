@@ -43,7 +43,7 @@ public final class Pool<T> {
         Holder<T> holder = deque.poll();
         if (holder == null) {
             T object = factory.create();
-            if (object == null) throw new RecyclerException("The factory must not return null.");
+            if (object == null) throw new IllegalStateException("The factory must not return null.");
 
             holder = new Holder<>(this, object);
         }
@@ -142,12 +142,5 @@ public final class Pool<T> {
     public interface Recycler<T> {
 
         void recycle(T object);
-    }
-
-    public static final class RecyclerException extends RuntimeException {
-
-        public RecyclerException(String message) {
-            super(message);
-        }
     }
 }
